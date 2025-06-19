@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Costos - Canales Digitales con IA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" id="favicon" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3ccircle cx='50' cy='50' r='40' fill='%23d4af37'/%3e%3ctext x='50' y='60' text-anchor='middle' fill='%23000' font-size='30' font-weight='bold'%3e1%3c/text%3e%3c/svg%3e">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            color: #2c2c2c;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #3a3a3a 0%, #2c2c2c 100%);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: #d4af37;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: #cccccc;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        /* Navegación y Progreso */
+        .navigation-wrapper {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #d4af37, #b8941f);
+            height: 100%;
+            width: 16.66%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .step-navigation {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .step-button {
+            background: #f8f8f8;
+            border: 2px solid #e0e0e0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .step-button.active {
+            background: linear-gradient(135deg, #d4af37, #b8941f);
+            color: white;
+            border-color: #d4af37;
+        }
+
+        .step-button.completed {
+            background: #2c2c2c;
+            color: #d4af37;
+            border-color: #2c2c2c;
+        }
+
+        .step-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .step-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Módulos */
+        .module {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            border: 1px solid #e0e0e0;
+            display: none;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .module-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #2c2c2c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #d4af37;
+            display: inline-block;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
+            color: #d4af37;
+            font-weight: 700;
+            padding: 15px;
+            text-align: left;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s ease;
+        }
+
+        tr:hover td {
+            background-color: #fafafa;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        input[type="checkbox"], input[type="radio"] {
+            transform: scale(1.2);
+            margin-right: 10px;
+            accent-color: #d4af37;
+        }
+
+        input[type="number"], input[type="text"], select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus, select:focus {
+            border-color: #d4af37;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .cost-display {
+            font-weight: 700;
+            color: #d4af37;
+            font-size: 1.1rem;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            min-width: 200px;
+            color: #2c2c2c;
+        }
+
+        .gold-accent {
+            color: #d4af37;
+            font-weight: 700;
+        }
+
+        .summary-table {
+            background: linear-gradient(135deg, #2c2c2c 0%, #3a3a3a 100%);
+            color: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .summary-table th {
+            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+            color: #2c2c2c;
+        }
+
+        .summary-table td {
+            border-bottom: 1px solid #4a4a4a;
+        }
+
+        .summary-table .total-row {
+            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+            color: #2c2c2c;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .note {
+            background: #f0f8ff;
+            border: 1px solid #d4af37;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            font-style: italic;
+            color: #2c2c2c;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #d4af37, #b8941f);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .custom-package-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 10px;
+            color: #856404;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .module {
+                padding: 20px;
+            }
+            
+            .step-navigation {
+                flex-direction: column;
+            }
+            
+            .step-button {
+                min-width: auto;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .input-group label {
+                min-width: auto;
+            }
+            
+            input[type="number"], input[type="text"], select {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Calculadora de Costos</h1>
+            <p>Canales Digitales con Inteligencia Artificial</p>
+        </div>
+
+        <div class="navigation-wrapper">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="step-navigation">
+                <button class="step-button active" onclick="goToStep(0)">
+                    <span class="step-icon">📱</span>
+                    <span>Canales</span>
+                </button>
+                <button class="step-button" onclick="goToStep(1)">
+                    <span class="step-icon">💬</span>
+                    <span>Conversaciones</span>
+                </button>
+                <button class="step-button" onclick="goToStep(2)">
+                    <span class="step-icon">📊</span>
+                    <span>MindX Insights</span>
+                </button>
+                <button class="step-button" onclick="goToStep(3)">
+                    <span class="step-icon">👥</span>
+                    <span>Agentes MindX</span>
+                </button>
+                <button class="step-button" onclick="goToStep(4)">
+                    <span class="step-icon">🤖</span>
+                    <span>IA Generativa</span>
+                </button>
+                <button class="step-button" onclick="goToStep(5)">
+                    <span class="step-icon">📋</span>
+                    <span>Resumen</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="module active" id="module0">
+            <h2 class="module-title">1. Selección de Canales Digitales</h2>
+            <p style="margin-bottom: 20px; color: #666;">El primer canal seleccionado es <span class="gold-accent">gratuito</span>. Canales adicionales tienen un costo <strong>mensual recurrente</strong> de <span class="gold-accent">USD $100</span> cada uno.</p>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Seleccionar</th>
+                            <th>Canal</th>
+                            <th>Costo Mensual (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox" id="whatsapp" onchange="calculateChannelCosts()"></td>
+                            <td>WhatsApp</td>
+                            <td class="cost-display">$0.00 (Primer canal gratuito)</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="telegram" onchange="calculateChannelCosts()"></td>
+                            <td>Telegram</td>
+                            <td class="cost-display">$100.00</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="facebook" onchange="calculateChannelCosts()"></td>
+                            <td>Facebook Messenger</td>
+                            <td class="cost-display">$100.00</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="instagram" onchange="calculateChannelCosts()"></td>
+                            <td>Instagram Direct Message</td>
+                            <td class="cost-display">$100.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: right; margin-top: 15px;">
+                <strong>Subtotal Canales (Mensual): <span class="gold-accent" id="channelSubtotal">$0.00 USD</span></strong>
+            </div>
+        </div>
+
+        <div class="module" id="module1">
+            <h2 class="module-title">2. Paquetes de Conversaciones</h2>
+            <p style="margin-bottom: 20px; color: #666;">Seleccione el paquete de conversaciones que mejor se adapte a sus necesidades. <strong>Incluye licencias de MindX Insights.</strong></p>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Seleccionar</th>
+                            <th>Paquete</th>
+                            <th>Conversaciones</th>
+                            <th>Licencias MindX Insights</th>
+                            <th>Precio (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="radio" name="package" value="3500-262.50-1" onchange="calculatePackageCosts()"></td>
+                            <td>Básico</td>
+                            <td>3,500</td>
+                            <td class="gold-accent">1 licencia</td>
+                            <td class="cost-display">$262.50</td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" name="package" value="5500-322.50-2" onchange="calculatePackageCosts()"></td>
+                            <td>Estándar</td>
+                            <td>5,500</td>
+                            <td class="gold-accent">2 licencias</td>
+                            <td class="cost-display">$322.50</td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" name="package" value="8500-412.50-3" onchange="calculatePackageCosts()"></td>
+                            <td>Profesional</td>
+                            <td>8,500</td>
+                            <td class="gold-accent">3 licencias</td>
+                            <td class="cost-display">$412.50</td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" name="package" value="10000-469.75-4" onchange="calculatePackageCosts()"></td>
+                            <td>Empresarial</td>
+                            <td>10,000</td>
+                            <td class="gold-accent">4 licencias</td>
+                            <td class="cost-display">$469.75</td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" name="package" value="30000-1388.11-5" onchange="calculatePackageCosts()"></td>
+                            <td>Corporativo I</td>
+                            <td>30,000</td>
+                            <td class="gold-accent">5 licencias</td>
+                            <td class="cost-display">$1,388.11</td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" name="package" value="60000-2706.82-6" onchange="calculatePackageCosts()"></td>
+                            <td>Corporativo II</td>
+                            <td>60,000</td>
+                            <td class="gold-accent">6 licencias</td>
+                            <td class="cost-display">$2,706.82</td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" name="package" value="90000-3956.12-7" onchange="calculatePackageCosts()"></td>
+                            <td>Corporativo III</td>
+                            <td>90,000</td>
+                            <td class="gold-accent">7 licencias</td>
+                            <td class="cost-display">$3,956.12</td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" name="package" value="120000-5136.01-8" onchange="calculatePackageCosts()"></td>
+                            <td>Enterprise I</td>
+                            <td>120,000</td>
+                            <td class="gold-accent">8 licencias</td>
+                            <td class="cost-display">$5,136.01</td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" name="package" value="150000-6246.50-9" onchange="calculatePackageCosts()"></td>
+                            <td>Enterprise II</td>
+                            <td>150,000</td>
+                            <td class="gold-accent">9 licencias</td>
+                            <td class="cost-display">$6,246.50</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="text-align: right; margin-top: 15px;">
+                <strong>Subtotal Conversaciones (Mensual): <span class="gold-accent" id="packageSubtotal">$0.00 USD</span></strong>
+            </div>
+        </div>
+
+        <div class="module" id="module2">
+            <h2 class="module-title">3. Licencias Adicionales MindX Insights</h2>
+            <p style="margin-bottom: 20px; color: #666;">Su paquete incluye <span class="gold-accent" id="includedLicenses">0</span> licencias de MindX Insights. Puede agregar licencias adicionales por <span class="gold-accent">$25.5 USD</span> cada una (mensual).</p>
+            
+            <div class="input-group">
+                <label>Licencias adicionales de MindX Insights:</label>
+                <input type="number" id="additionalInsights" min="0" value="0" onchange="calculateInsightsCosts()">
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Licencias incluidas en paquete</td>
+                            <td class="gold-accent" id="packageLicensesDisplay">0</td>
+                            <td>Incluido</td>
+                            <td class="cost-display">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Licencias adicionales</td>
+                            <td class="gold-accent" id="additionalLicensesDisplay">0</td>
+                            <td>$25.50</td>
+                            <td class="cost-display" id="additionalInsightsCost">$0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: right; margin-top: 15px;">
+                <strong>Subtotal MindX Insights (Mensual): <span class="gold-accent" id="insightsSubtotal">$0.00 USD</span></strong>
+            </div>
+        </div>
+
+        <div class="module" id="module3">
+            <h2 class="module-title">4. Licencias de Agentes MindX</h2>
+            <p style="margin-bottom: 20px; color: #666;">Licencias de agentes para gestión avanzada. Cada licencia tiene un costo de <span class="gold-accent">$20 USD</span> mensual.</p>
+            
+            <div class="input-group">
+                <label>Cantidad de licencias de Agentes MindX:</label>
+                <input type="number" id="agentLicenses" min="0" value="0" onchange="calculateAgentCosts()">
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Licencias de Agentes MindX</td>
+                            <td class="gold-accent" id="agentLicensesDisplay">0</td>
+                            <td>$20.00</td>
+                            <td class="cost-display" id="agentsCost">$0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: right; margin-top: 15px;">
+                <strong>Subtotal Agentes MindX (Mensual): <span class="gold-accent" id="agentsSubtotal">$0.00 USD</span></strong>
+            </div>
+        </div>
+
+        <div class="module" id="module4">
+            <h2 class="module-title">5. Inteligencia Artificial Generativa</h2>
+            
+            <div class="input-group">
+                <label>
+                    <input type="checkbox" id="includeAI" onchange="toggleAISection()">
+                    ¿Desea incluir IA Generativa en su solución?
+                </label>
+            </div>
+
+            <div id="aiDetails" style="display: none;">
+                <div class="input-group">
+                    <label>Mensajes promedio por conversación:</label>
+                    <input type="number" id="messagesPerConversation" min="1" value="10" onchange="calculateAICosts()">
+                </div>
+
+                <div class="input-group">
+                    <label>Mensajes que requerirán IA Generativa:</label>
+                    <input type="number" id="aiMessages" min="0" value="5" onchange="calculateAICosts()">
+                </div>
+
+                <div class="input-group">
+                    <label>Tamaño del archivo de conocimiento (MB):</label>
+                    <input type="number" id="fileSize" min="0.1" step="0.1" value="10" onchange="calculateAICosts()">
+                </div>
+
+                <div class="input-group">
+                    <label>Frecuencia de actualización del archivo:</label>
+                    <select id="updateFrequency" onchange="calculateAICosts()">
+                        <option value="1">Mensual</option>
+                        <option value="3">Trimestral</option>
+                        <option value="6">Semestral</option>
+                        <option value="12">Anual</option>
+                    </select>
+                </div>
+
+                <div class="table-container" style="margin-top: 20px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Componente IA</th>
+                                <th>Descripción</th>
+                                <th>Tipo de Costo</th>
+                                <th>Valor (USD)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Carga de Información</td>
+                                <td>$0.093 por MB × frecuencia anual</td>
+                                <td>Anual</td>
+                                <td class="cost-display" id="loadingCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Almacenamiento</td>
+                                <td>Archivo × $1.7 (por MB)</td>
+                                <td>Mensual</td>
+                                <td class="cost-display" id="storageCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Consumo de Tokens</td>
+                                <td>$6.3 por millón de tokens</td>
+                                <td>Mensual</td>
+                                <td class="cost-display" id="tokenCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Modelo de Mensajes</td>
+                                <td>$111 por cada 20,000 mensajes</td>
+                                <td>Mensual</td>
+                                <td class="cost-display" id="messageCost">$0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="text-align: right; margin-top: 15px;">
+                    <div><strong>Subtotal IA Carga (Anual): <span class="gold-accent" id="aiLoadingSubtotal">$0.00 USD</span></strong></div>
+                    <div><strong>Subtotal IA Operación (Mensual): <span class="gold-accent" id="aiMonthlySubtotal">$0.00 USD</span></strong></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="module" id="module5">
+            <h2 class="module-title">Resumen de Costos</h2>
+            
+            <div class="table-container">
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Cantidad</th>
+                            <th>Costo Mensual (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Canales Digitales</td>
+                            <td class="gold-accent" id="summaryChannelsQty">0</td>
+                            <td class="cost-display" id="summaryChannelsMonthly">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Paquete de Conversaciones</td>
+                            <td class="gold-accent" id="summaryPackageQty">0</td>
+                            <td class="cost-display" id="summaryPackageMonthly">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>MindX Insights Adicionales</td>
+                            <td class="gold-accent" id="summaryInsightsQty">0</td>
+                            <td class="cost-display" id="summaryInsightsMonthly">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Agentes MindX</td>
+                            <td class="gold-accent" id="summaryAgentsQty">0</td>
+                            <td class="cost-display" id="summaryAgentsMonthly">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>IA - Operación Mensual</td>
+                            <td class="gold-accent" id="summaryAIOperationQty">0</td>
+                            <td class="cost-display" id="summaryAIMonthly">$0.00</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td><strong>SUBTOTAL MENSUAL RECURRENTE</strong></td>
+                            <td><strong>-</strong></td>
+                            <td class="cost-display"><strong id="totalMonthlyRecurrent">$0.00</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3 style="color: #2c2c2c; margin-bottom: 20px; font-weight: 700;">Resumen Total de Inversión</h3>
+                
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <label>TRM (Tasa Representativa del Mercado):</label>
+                    <input type="number" id="trm" min="0" step="0.01" value="4200" oninput="calculateCurrencyConversion()" placeholder="Ej: 4200">
+                    <span style="color: #666; margin-left: 10px;">COP por USD</span>
+                </div>
+
+                <div class="table-container">
+                    <table class="summary-table">
+                        <thead>
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Valor USD</th>
+                                <th>Valor COP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>IA - Carga Inicial (Anual)</td>
+                                <td class="cost-display" id="totalAILoadingUSD">$0.00</td>
+                                <td class="cost-display" id="totalAILoadingCOP">$0</td>
+                            </tr>
+                            <tr>
+                                <td>Total Mensual Recurrente</td>
+                                <td class="cost-display" id="totalMonthlyUSD">$0.00</td>
+                                <td class="cost-display" id="totalMonthlyCOP">$0</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td><strong>Total Anual (12 meses de recurrente + carga IA)</strong></td>
+                                <td class="cost-display"><strong id="totalAnnualUSD">$0.00</strong></td>
+                                <td class="cost-display"><strong id="totalAnnualCOP">$0</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="note">
+                <p><strong>📋 Notas Importantes:</strong></p>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Los servicios están excluidos de IVA por ser servicios en la nube</li>
+                    <li>Se incluye soporte local 24/7 que cubre incidencias y caídas totales del servicio</li>
+                    <li>Los costos de IA Generativa varían según el uso real del sistema</li>
+                    <li>Los paquetes personalizados requieren validación con el Arquitecto de Diferenciación</li>
+                    <li>Los costos de carga de IA se calculan anualmente según la frecuencia de actualización (mensual x12, trimestral x4, semestral x2, anual x1)</li>
+                    <li>La TRM es solo para referencia, verificar tasa actual al momento de la facturación</li>
+                    <li>El total anual incluye 12 meses de servicios recurrentes más el costo de carga inicial de IA</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="navigation-buttons">
+            <button class="nav-btn" id="prevBtn" onclick="previousStep()" disabled>⬅ Anterior</button>
+            <button class="nav-btn" id="nextBtn" onclick="nextStep()">Siguiente ➡</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        let channelCost = 0;
+        let channelsSelected = 0;
+        let packageCost = 0;
+        let packageConversations = 0;
+        let packageLicenses = 0;
+        let additionalInsightsCost = 0;
+        let additionalInsightsQty = 0;
+        let agentsCost = 0;
+        let agentsQty = 0;
+        let aiLoadingCost = 0;
+        let aiMonthlyCost = 0;
+        let aiDetailsIncluded = false; // Flag para saber si la IA Generativa está seleccionada
+
+        const TRM_DEFAULT = 4200; // Valor por defecto de TRM
+
+        function updateFavicon(step) {
+            const favicon = document.getElementById('favicon');
+            const stepNumber = step + 1;
+            favicon.href = `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3ccircle cx='50' cy='50' r='40' fill='%23d4af37'/%3e%3ctext x='50' y='60' text-anchor='middle' fill='%23000' font-size='30' font-weight='bold'%3e${stepNumber}%3c/text%3e%3c/svg%3e`;
+        }
+
+        function goToStep(step) {
+            // Ocultar módulo actual
+            document.getElementById(`module${currentStep}`).classList.remove('active');
+            
+            // Mostrar nuevo módulo
+            document.getElementById(`module${step}`).classList.add('active');
+            
+            // Actualizar botones de navegación de pasos
+            const buttons = document.querySelectorAll('.step-button');
+            buttons.forEach((btn, index) => {
+                btn.classList.remove('active');
+                if (index < step) {
+                    btn.classList.add('completed');
+                } else {
+                    btn.classList.remove('completed');
+                }
+            });
+            buttons[step].classList.add('active');
+            
+            // Actualizar barra de progreso
+            const progressFill = document.getElementById('progressFill');
+            const progress = ((step + 1) / 6) * 100;
+            progressFill.style.width = `${progress}%`;
+            
+            // Actualizar favicon
+            updateFavicon(step);
+            
+            // Actualizar botones de navegación (Anterior/Siguiente)
+            document.getElementById('prevBtn').disabled = step === 0;
+            document.getElementById('nextBtn').textContent = step === 5 ? 'Finalizar' : 'Siguiente ➡';
+            
+            currentStep = step;
+
+            // Recalcular todo al cambiar de paso, especialmente al ir al resumen
+            if (currentStep === 5) {
+                updateSummary();
+                calculateCurrencyConversion();
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < 5) {
+                goToStep(currentStep + 1);
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 0) {
+                goToStep(currentStep - 1);
+            }
+        }
+
+        function calculateChannelCosts() {
+            const channels = ['whatsapp', 'telegram', 'facebook', 'instagram'];
+            let selectedCount = 0;
+            
+            channels.forEach(channel => {
+                if (document.getElementById(channel).checked) {
+                    selectedCount++;
+                }
+            });
+
+            channelsSelected = selectedCount;
+            // El primer canal es gratuito, los adicionales son $100 mensual cada uno
+            channelCost = selectedCount > 0 ? (selectedCount - 1) * 100 : 0;
+            
+            // Actualizar la visualización de costos en la tabla de selección
+            const rows = document.querySelectorAll('#module0 table tbody tr');
+            let channelIndex = 0;
+            channels.forEach(channel => {
+                const checkbox = document.getElementById(channel);
+                const costCell = rows[channelIndex].querySelector('.cost-display');
+                
+                if (checkbox.checked && selectedCount === 1) {
+                    costCell.textContent = '$0.00 (Primer canal gratuito)';
+                } else if (checkbox.checked) {
+                    costCell.textContent = '$100.00';
+                } else {
+                    // Restablecer el costo a $100.00 si no es el único seleccionado y se desmarca,
+                    // o si nunca fue seleccionado
+                    costCell.textContent = '$100.00';
+                }
+                channelIndex++;
+            });
+
+            document.getElementById('channelSubtotal').textContent = `$${channelCost.toFixed(2)} USD`;
+            updateSummary();
+        }
+
+        function calculatePackageCosts() {
+            const selectedPackage = document.querySelector('input[name="package"]:checked');
+            
+            if (selectedPackage) {
+                const packageData = selectedPackage.value.split('-');
+                packageConversations = parseInt(packageData[0]);
+                packageCost = parseFloat(packageData[1]);
+                packageLicenses = parseInt(packageData[2]);
+                
+                document.getElementById('packageSubtotal').textContent = `$${packageCost.toFixed(2)} USD`;
+                document.getElementById('includedLicenses').textContent = packageLicenses;
+                document.getElementById('packageLicensesDisplay').textContent = packageLicenses;
+                
+                calculateInsightsCosts(); // Recalcula insights si cambia el paquete
+                calculateAICosts(); // Recalcula IA si cambia el paquete (por el num de conversaciones)
+            } else {
+                packageCost = 0;
+                packageConversations = 0;
+                packageLicenses = 0;
+                document.getElementById('packageSubtotal').textContent = '$0.00 USD';
+                document.getElementById('includedLicenses').textContent = '0';
+                document.getElementById('packageLicensesDisplay').textContent = '0';
+                calculateInsightsCosts(); // Recalcula insights a 0
+                calculateAICosts(); // Recalcula IA a 0
+            }
+            
+            updateSummary();
+        }
+
+        function calculateInsightsCosts() {
+            additionalInsightsQty = parseInt(document.getElementById('additionalInsights').value) || 0;
+            additionalInsightsCost = additionalInsightsQty * 25.5;
+            
+            document.getElementById('additionalLicensesDisplay').textContent = additionalInsightsQty;
+            document.getElementById('additionalInsightsCost').textContent = `$${additionalInsightsCost.toFixed(2)}`;
+            document.getElementById('insightsSubtotal').textContent = `$${additionalInsightsCost.toFixed(2)} USD`;
+            
+            updateSummary();
+        }
+
+        function calculateAgentCosts() {
+            agentsQty = parseInt(document.getElementById('agentLicenses').value) || 0;
+            agentsCost = agentsQty * 20;
+            
+            document.getElementById('agentLicensesDisplay').textContent = agentsQty;
+            document.getElementById('agentsCost').textContent = `$${agentsCost.toFixed(2)}`;
+            document.getElementById('agentsSubtotal').textContent = `$${agentsCost.toFixed(2)} USD`;
+            
+            updateSummary();
+        }
+
+        function toggleAISection() {
+            aiDetailsIncluded = document.getElementById('includeAI').checked;
+            const aiDetails = document.getElementById('aiDetails');
+            
+            if (aiDetailsIncluded) {
+                aiDetails.style.display = 'block';
+                calculateAICosts();
+            } else {
+                aiDetails.style.display = 'none';
+                aiLoadingCost = 0;
+                aiMonthlyCost = 0;
+                updateAIDisplay();
+                updateSummary();
+            }
+        }
+
+        function calculateAICosts() {
+            if (!aiDetailsIncluded || packageConversations === 0) {
+                aiLoadingCost = 0;
+                aiMonthlyCost = 0;
+                updateAIDisplay();
+                updateSummary();
+                return;
+            }
+
+            const messagesPerConversation = parseInt(document.getElementById('messagesPerConversation').value) || 0;
+            const aiMessages = parseInt(document.getElementById('aiMessages').value) || 0;
+            const fileSize = parseFloat(document.getElementById('fileSize').value) || 0;
+            const updateFrequency = parseInt(document.getElementById('updateFrequency').value) || 12;
+
+            // Cálculos
+            // a. Carga de Información (anual, sumando cada carga individual)
+            const loadingCostPerUpdate = fileSize * 0.093;
+            
+            let updatesPerYear;
+            switch(updateFrequency) {
+                case 1: // Mensual
+                    updatesPerYear = 12;
+                    break;
+                case 3: // Trimestral
+                    updatesPerYear = 4;
+                    break;
+                case 6: // Semestral
+                    updatesPerYear = 2;
+                    break;
+                case 12: // Anual
+                    updatesPerYear = 1;
+                    break;
+                default:
+                    updatesPerYear = 1;
+            }
+            
+            aiLoadingCost = loadingCostPerUpdate * updatesPerYear;
+
+            // b. Almacenamiento (mensual)
+            const storageCost = fileSize * 1.7;
+
+            // c. Modelo de consumo (tokens, mensual)
+            const totalConversationsMonthly = packageConversations;
+            const totalAIMessagesMonthly = totalConversationsMonthly * aiMessages;
+            const totalTokensMonthly = totalAIMessagesMonthly * 880; // Suponiendo 880 tokens por mensaje (un estimado)
+            const tokenCostMonthly = (totalTokensMonthly / 1000000) * 6.3;
+
+            // d. Modelo de mensajes (mensual)
+            const totalMessagesMonthly = totalConversationsMonthly * messagesPerConversation;
+            const messageCostMonthly = (totalMessagesMonthly / 20000) * 111;
+
+            // Costo mensual de operación de IA
+            aiMonthlyCost = storageCost + tokenCostMonthly + messageCostMonthly;
+
+            // Actualizar visualización en la tabla de IA Generativa
+            document.getElementById('loadingCost').textContent = `$${loadingCostPerUpdate.toFixed(2)} (x${updatesPerYear}/año = $${aiLoadingCost.toFixed(2)})`;
+            document.getElementById('storageCost').textContent = `$${storageCost.toFixed(2)}`;
+            document.getElementById('tokenCost').textContent = `$${tokenCostMonthly.toFixed(2)}`;
+            document.getElementById('messageCost').textContent = `$${messageCostMonthly.toFixed(2)}`;
+
+            updateAIDisplay();
+            updateSummary();
+        }
+
+        function updateAIDisplay() {
+            document.getElementById('aiLoadingSubtotal').textContent = `$${aiLoadingCost.toFixed(2)} USD`;
+            document.getElementById('aiMonthlySubtotal').textContent = `$${aiMonthlyCost.toFixed(2)} USD`;
+        }
+
+        function updateSummary() {
+            // Actualizar cantidades en la tabla de resumen
+            document.getElementById('summaryChannelsQty').textContent = channelsSelected;
+            document.getElementById('summaryPackageQty').textContent = packageConversations > 0 ? '1 paquete' : '0'; // Asumimos 1 paquete si se selecciona
+            document.getElementById('summaryInsightsQty').textContent = additionalInsightsQty;
+            document.getElementById('summaryAgentsQty').textContent = agentsQty;
+            document.getElementById('summaryAIOperationQty').textContent = aiDetailsIncluded && packageConversations > 0 ? 'Aplicable' : 'No incluido'; // Muestra "Aplicable" si se activó IA y hay paquete
+
+            // Actualizar costos mensuales en la tabla de resumen
+            document.getElementById('summaryChannelsMonthly').textContent = `$${channelCost.toFixed(2)}`;
+            document.getElementById('summaryPackageMonthly').textContent = `$${packageCost.toFixed(2)}`;
+            document.getElementById('summaryInsightsMonthly').textContent = `$${additionalInsightsCost.toFixed(2)}`;
+            document.getElementById('summaryAgentsMonthly').textContent = `$${agentsCost.toFixed(2)}`;
+            document.getElementById('summaryAIMonthly').textContent = `$${aiMonthlyCost.toFixed(2)}`;
+
+            // Calcular y mostrar el Subtotal Mensual Recurrente
+            const totalMonthlyRecurrent = channelCost + packageCost + additionalInsightsCost + agentsCost + aiMonthlyCost;
+            document.getElementById('totalMonthlyRecurrent').textContent = `$${totalMonthlyRecurrent.toFixed(2)}`;
+
+            // Actualizar la tabla de Totales con Conversión
+            document.getElementById('totalAILoadingUSD').textContent = `$${aiLoadingCost.toFixed(2)}`;
+            document.getElementById('totalMonthlyUSD').textContent = `$${totalMonthlyRecurrent.toFixed(2)}`;
+            
+            const totalAnnualUSD = (totalMonthlyRecurrent * 12) + aiLoadingCost;
+            document.getElementById('totalAnnualUSD').textContent = `$${totalAnnualUSD.toFixed(2)}`;
+
+            calculateCurrencyConversion(); // Recalcular conversión cada vez que el resumen se actualiza
+        }
+
+        function calculateCurrencyConversion() {
+            const trmInput = document.getElementById('trm');
+            const trm = parseFloat(trmInput.value) || 0;
+
+            const totalAILoadingUSD = parseFloat(document.getElementById('totalAILoadingUSD').textContent.replace('$', '')) || 0;
+            const totalMonthlyUSD = parseFloat(document.getElementById('totalMonthlyUSD').textContent.replace('$', '')) || 0;
+            const totalAnnualUSD = parseFloat(document.getElementById('totalAnnualUSD').textContent.replace('$', '')) || 0;
+
+            document.getElementById('totalAILoadingCOP').textContent = `$${(totalAILoadingUSD * trm).toLocaleString('es-CO', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+            document.getElementById('totalMonthlyCOP').textContent = `$${(totalMonthlyUSD * trm).toLocaleString('es-CO', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+            document.getElementById('totalAnnualCOP').textContent = `$${(totalAnnualUSD * trm).toLocaleString('es-CO', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+        }
+
+        // Inicializar cálculos y visualización al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('trm').value = TRM_DEFAULT; // Establecer TRM por defecto
+            calculateChannelCosts();
+            calculatePackageCosts();
+            calculateInsightsCosts();
+            calculateAgentCosts();
+            calculateAICosts(); // Asegura que los costos de IA se calculen si el checkbox está marcado inicialmente
+            updateSummary();
+            calculateCurrencyConversion(); // Realiza la conversión inicial
+            updateFavicon(0);
+        });
+    </script>
+</body>
+</html>
