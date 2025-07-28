@@ -4,132 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Costos - Canales Digitales con IA</title>
+    
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" id="favicon" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3ccircle cx='50' cy='50' r='40' fill='%23d4af37'/%3e%3ctext x='50' y='60' text-anchor='middle' fill='%23000' font-size='30' font-weight='bold'%3e1%3c/text%3e%3c/svg%3e">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEpePjyICTVT3hMbQv9hdZ9eNbN3/gI7w3kYCVkqwLN9avMvaNMaPd/EKr" crossorigin="anonymous">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" id="favicon" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3ccircle cx='50' cy='50' r='40' fill='%23d4af37'/%3e%3ctext x='50' y='60' text-anchor='middle' fill='%23fff' font-size='30' font-weight='bold'%3e1%3c/text%3e%3c/svg%3e">
+    
+    <!-- Custom Styles -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary-gold: #d4af37;
+            --dark-blue: #2c3e50;
+            --light-gray: #f8f9fa;
+            --dark-text: #343a40;
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
-            color: #2c2c2c;
-            line-height: 1.6;
-            min-height: 100vh;
+            background-color: var(--light-gray);
+            color: var(--dark-text);
+            padding-top: 70px; /* To offset the fixed navbar */
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        .navbar {
+            background-color: var(--dark-blue) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 30px;
-            background: linear-gradient(135deg, #3a3a3a 0%, #2c2c2c 100%);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-        }
-
-        .header h1 {
-            font-family: 'Montserrat', sans-serif;
+        .navbar-brand {
+            color: var(--primary-gold) !important;
             font-weight: 700;
-            color: #d4af37;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 1.4rem;
+        }
+        
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
         }
 
-        .header p {
-            color: #cccccc;
-            font-size: 1.1rem;
-            font-weight: 400;
+        .navbar-nav .nav-link.active,
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-gold);
         }
 
-        /* Navegación y Progreso */
-        .navigation-wrapper {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        .progress-container {
+            width: 30%;
+            min-width: 200px;
+        }
+
+        .progress {
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
         .progress-bar {
-            background: #e0e0e0;
-            height: 8px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            overflow: hidden;
+            background-color: var(--primary-gold);
+            transition: width 0.4s ease-in-out;
         }
 
-        .progress-fill {
-            background: linear-gradient(90deg, #d4af37, #b8941f);
-            height: 100%;
-            width: 16.66%;
-            border-radius: 4px;
-            transition: width 0.5s ease;
+        .main-content {
+            padding: 2.5rem 1.5rem;
         }
 
-        .step-navigation {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .step-button {
-            background: #f8f8f8;
-            border: 2px solid #e0e0e0;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            min-width: 140px;
-            justify-content: center;
-        }
-
-        .step-button.active {
-            background: linear-gradient(135deg, #d4af37, #b8941f);
-            color: white;
-            border-color: #d4af37;
-        }
-
-        .step-button.completed {
-            background: #2c2c2c;
-            color: #d4af37;
-            border-color: #2c2c2c;
-        }
-
-        .step-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .step-icon {
-            font-size: 1.2rem;
-        }
-
-        /* Módulos */
         .module {
-            background: white;
+            background-color: #ffffff;
             border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-            border: 1px solid #e0e0e0;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
             display: none;
-            animation: fadeInUp 0.5s ease;
+            animation: fadeInUp 0.5s ease-in-out;
         }
 
         .module.active {
@@ -148,260 +99,281 @@
         }
 
         .module-title {
-            font-family: 'Montserrat', sans-serif;
+            color: var(--dark-blue);
+            font-size: 2rem;
             font-weight: 700;
-            font-size: 1.8rem;
-            color: #2c2c2c;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #d4af37;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--primary-gold);
+            padding-bottom: 0.75rem;
             display: inline-block;
         }
 
-        .table-container {
-            overflow-x: auto;
-            margin-bottom: 20px;
+        .form-check-input:checked {
+            background-color: var(--primary-gold);
+            border-color: var(--primary-gold);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+        .btn-gold {
+            background-color: var(--primary-gold);
+            border-color: var(--primary-gold);
+            color: #fff;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
-        th {
-            background: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 100%);
-            color: #d4af37;
-            font-weight: 700;
-            padding: 15px;
-            text-align: left;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .btn-gold:hover {
+            background-color: #b8941f;
+            border-color: #b8941f;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
-            transition: background-color 0.2s ease;
+        
+        .btn-outline-gold {
+            color: var(--primary-gold);
+            border-color: var(--primary-gold);
+            font-weight: 600;
         }
-
-        tr:hover td {
-            background-color: #fafafa;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        input[type="checkbox"], input[type="radio"] {
-            transform: scale(1.2);
-            margin-right: 10px;
-            accent-color: #d4af37;
-        }
-
-        input[type="number"], input[type="text"], select {
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            width: 100%;
-            max-width: 200px;
-        }
-
-        input[type="number"]:focus, input[type="text"]:focus, select:focus {
-            border-color: #d4af37;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        .btn-outline-gold:hover {
+            background-color: var(--primary-gold);
+            border-color: var(--primary-gold);
+            color: #fff;
         }
 
         .cost-display {
             font-weight: 700;
-            color: #d4af37;
-            font-size: 1.1rem;
+            color: var(--primary-gold);
         }
 
-        .input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+        .table thead th {
+            background-color: var(--dark-blue);
+            color: #fff;
         }
 
-        .input-group label {
-            font-weight: 600;
-            min-width: 200px;
-            color: #2c2c2c;
-        }
-
-        .gold-accent {
-            color: #d4af37;
-            font-weight: 700;
-        }
-
-        .summary-table {
-            background: linear-gradient(135deg, #2c2c2c 0%, #3a3a3a 100%);
-            color: white;
+        .implementation-card {
+            border: 2px solid #e9ecef;
             border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .summary-table th {
-            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
-            color: #2c2c2c;
-        }
-
-        .summary-table td {
-            border-bottom: 1px solid #4a4a4a;
-        }
-
-        .summary-table .total-row {
-            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
-            color: #2c2c2c;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .note {
-            background: #f0f8ff;
-            border: 1px solid #d4af37;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-            font-style: italic;
-            color: #2c2c2c;
-        }
-
-        .navigation-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            gap: 15px;
-        }
-
-        .nav-btn {
-            background: linear-gradient(135deg, #d4af37, #b8941f);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 120px;
+            cursor: pointer;
         }
 
-        .nav-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        .implementation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .implementation-card.selected {
+            border-color: var(--primary-gold);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.25);
         }
 
-        .nav-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .implementation-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .implementation-header h3 { font-size: 1.25rem; font-weight: 700; color: var(--dark-text); }
+        .implementation-header .implementation-subtitle { font-size: 0.9rem; color: #6c757d; }
+
+        .implementation-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-gold);
         }
 
-        .custom-package-note {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 6px;
-            padding: 15px;
-            margin-top: 10px;
-            color: #856404;
-            font-weight: 600;
+        .feature-item::before {
+            content: '✓';
+            color: var(--primary-gold);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .summary-section {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .module {
-                padding: 20px;
-            }
-            
-            .step-navigation {
-                flex-direction: column;
-            }
-            
-            .step-button {
-                min-width: auto;
-            }
-            
-            .input-group {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .input-group label {
-                min-width: auto;
-            }
-            
-            input[type="number"], input[type="text"], select {
-                max-width: 100%;
-            }
+        .summary-section h4 {
+            color: var(--dark-blue);
+            font-size: 1.5rem;
+            font-weight: 700;
         }
+        
+        .summary-table .total-row {
+            background-color: var(--dark-blue);
+            color: #fff;
+            font-weight: bold;
+        }
+        .summary-table .total-row .cost-display {
+            color: var(--primary-gold) !important;
+        }
+
+        .grand-total-section {
+            background: linear-gradient(135deg, var(--dark-blue), #1c2833);
+            color: #fff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .grand-total-section h4 { color: #fff; }
+        .grand-total-section .display-4 { color: var(--primary-gold); }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Calculadora de Costos</h1>
-            <p>Canales Digitales con Inteligencia Artificial</p>
-        </div>
-
-        <div class="navigation-wrapper">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="step-navigation">
-                <button class="step-button active" onclick="goToStep(0)">
-                    <span class="step-icon">📱</span>
-                    <span>Canales</span>
-                </button>
-                <button class="step-button" onclick="goToStep(1)">
-                    <span class="step-icon">💬</span>
-                    <span>Conversaciones</span>
-                </button>
-                <button class="step-button" onclick="goToStep(2)">
-                    <span class="step-icon">📊</span>
-                    <span>MindX Insights</span>
-                </button>
-                <button class="step-button" onclick="goToStep(3)">
-                    <span class="step-icon">👥</span>
-                    <span>Agentes MindX</span>
-                </button>
-                <button class="step-button" onclick="goToStep(4)">
-                    <span class="step-icon">🤖</span>
-                    <span>IA Generativa</span>
-                </button>
-                <button class="step-button" onclick="goToStep(5)">
-                    <span class="step-icon">📋</span>
-                    <span>Resumen</span>
-                </button>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Calculadora de Costos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- Nav links will be dynamically controlled by JS -->
+                </ul>
+                <div class="d-flex align-items-center progress-container">
+                    <div class="progress w-100">
+                        <div class="progress-bar" id="progressFill" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
             </div>
         </div>
+    </nav>
 
+    <div class="container-fluid main-content">
+        <!-- MÓDULO 0 -->
         <div class="module active" id="module0">
-            <h2 class="module-title">1. Selección de Canales Digitales</h2>
-            <p style="margin-bottom: 20px; color: #666;">El primer canal seleccionado es <span class="gold-accent">gratuito</span>. Canales adicionales tienen un costo <strong>mensual recurrente</strong> de <span class="gold-accent">USD $100</span> cada uno.</p>
-            
-            <div class="table-container">
-                <table>
-                    <thead>
+            <h2 class="module-title">1. Selección de Producto</h2>
+            <p class="mb-3 text-muted">Por favor, seleccione qué producto(s) desea cotizar:</p>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="includeMindX" checked onchange="handleProductSelection()">
+                <label class="form-check-label" for="includeMindX">
+                    MINDX (Canales Digitales con IA)
+                </label>
+            </div>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="includeFive9" onchange="handleProductSelection()">
+                <label class="form-check-label" for="includeFive9">
+                    Five9
+                </label>
+            </div>
+
+            <div id="five9Details" class="mt-4 p-3 bg-light border border-warning rounded" style="display: none;">
+                <h3 class="mb-3">Configuración Five9</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Valor Unitario USD</th>
+                                <th>Cantidad</th>
+                                <th>Costo Mensual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>VCC Agent Seat - Blended</td>
+                                <td class="cost-display">$60.89</td>
+                                <td><input type="number" class="form-control" id="five9Agents" min="0" value="0" oninput="calculateFive9Costs()"></td>
+                                <td class="cost-display" id="five9AgentsCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>VCC Supervisor</td>
+                                <td class="cost-display">$60.89</td>
+                                <td><input type="number" class="form-control" id="five9Supervisors" min="0" value="0" oninput="calculateFive9Costs()"></td>
+                                <td class="cost-display" id="five9SupervisorsCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>VCC Administrator</td>
+                                <td class="cost-display">$60.89</td>
+                                <td><input type="number" class="form-control" id="five9Admins" min="0" value="0" oninput="calculateFive9Costs()"></td>
+                                <td class="cost-display" id="five9AdminsCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Chat Agent</td>
+                                <td class="cost-display">$3.38</td>
+                                <td><input type="number" class="form-control" id="five9ChatAgent" min="0" value="0" oninput="calculateFive9Costs()"></td>
+                                <td class="cost-display" id="five9ChatAgentCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Email Agent</td>
+                                <td class="cost-display">$3.38</td>
+                                <td><input type="number" class="form-control" id="five9EmailAgent" min="0" value="0" oninput="calculateFive9Costs()"></td>
+                                <td class="cost-display" id="five9EmailAgentCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>NCX1 Voice + Email + Adv. Chat</td>
+                                <td class="cost-display">$67.66</td>
+                                <td><input type="number" class="form-control" id="five9NCX1" min="0" value="0" oninput="calculateFive9Costs()"></td>
+                                <td class="cost-display" id="five9NCX1Cost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>SIP Inbound Flat Rate</td>
+                                <td class="cost-display">$101.49</td>
+                                <td><input type="number" class="form-control" id="five9SIPInbound" min="1" value="1" oninput="calculateFive9Costs()" readonly></td>
+                                <td class="cost-display" id="five9SIPInboundCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>SIP Outbound (No Backup)</td>
+                                <td class="cost-display">$101.49</td>
+                                <td><input type="number" class="form-control" id="five9SIPOutbound" min="1" value="1" oninput="calculateFive9Costs()" readonly></td>
+                                <td class="cost-display" id="five9SIPOutboundCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>VCC Recording Storage - 2 Months</td>
+                                <td class="cost-display">$0.95</td>
+                                <td><input type="number" class="form-control" id="five9RecStorage" min="0" value="0" oninput="calculateFive9Costs()"></td>
+                                <td class="cost-display" id="five9RecStorageCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>VCC Call Log Storage - 3 Months</td>
+                                <td class="cost-display">$0.51</td>
+                                <td><input type="number" class="form-control" id="five9CallLogStorage" min="0" value="0" oninput="calculateFive9Costs()"></td>
+                                <td class="cost-display" id="five9CallLogStorageCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Salesforce Adapter</td>
+                                <td class="cost-display">$10.15</td>
+                                <td><input type="number" class="form-control" id="five9Salesforce" min="0" value="0" oninput="calculateFive9Costs()"></td>
+                                <td class="cost-display" id="five9SalesforceCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Five9 UC Adapter - MS Teams / Zoom</td>
+                                <td class="cost-display">$10.15</td>
+                                <td><input type="number" class="form-control" id="five9UCAdapter" min="0" value="0" oninput="calculateFive9Costs()"></td>
+                                <td class="cost-display" id="five9UCAdapterCost">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Agent Assist Standard</td>
+                                <td class="cost-display">$50.74</td>
+                                <td><input type="number" class="form-control" id="five9AgentAssist" min="0" value="0" oninput="calculateFive9Costs()"></td>
+                                <td class="cost-display" id="five9AgentAssistCost">$0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-end mt-3">
+                    <strong>Subtotal Five9 (Mensual): <span class="cost-display" id="five9Subtotal">$0.00 USD</span></strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 1 -->
+        <div class="module" id="module1">
+            <h2 class="module-title">2. Selección de Canales Digitales</h2>
+            <p class="mb-3 text-muted">El primer canal seleccionado es <strong class="cost-display">gratuito</strong>. Canales adicionales tienen un costo de <strong class="cost-display">USD $100 mensual</strong> cada uno.</p>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="table-dark">
                         <tr>
                             <th>Seleccionar</th>
                             <th>Canal</th>
@@ -410,450 +382,643 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="checkbox" id="whatsapp" onchange="calculateChannelCosts()"></td>
+                            <td><input type="checkbox" class="form-check-input" id="whatsapp" onchange="calculateChannelCosts()"></td>
                             <td>WhatsApp</td>
-                            <td class="cost-display">$0.00 (Primer canal gratuito)</td>
+                            <td class="cost-display" data-cost="100">$100.00</td>
                         </tr>
                         <tr>
-                            <td><input type="checkbox" id="telegram" onchange="calculateChannelCosts()"></td>
+                            <td><input type="checkbox" class="form-check-input" id="telegram" onchange="calculateChannelCosts()"></td>
                             <td>Telegram</td>
-                            <td class="cost-display">$100.00</td>
+                            <td class="cost-display" data-cost="100">$100.00</td>
                         </tr>
                         <tr>
-                            <td><input type="checkbox" id="facebook" onchange="calculateChannelCosts()"></td>
+                            <td><input type="checkbox" class="form-check-input" id="facebook" onchange="calculateChannelCosts()"></td>
                             <td>Facebook Messenger</td>
-                            <td class="cost-display">$100.00</td>
+                            <td class="cost-display" data-cost="100">$100.00</td>
                         </tr>
                         <tr>
-                            <td><input type="checkbox" id="instagram" onchange="calculateChannelCosts()"></td>
+                            <td><input type="checkbox" class="form-check-input" id="instagram" onchange="calculateChannelCosts()"></td>
                             <td>Instagram Direct Message</td>
-                            <td class="cost-display">$100.00</td>
+                            <td class="cost-display" data-cost="100">$100.00</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="form-check-input" id="webchat" onchange="calculateChannelCosts()"></td>
+                            <td>WebChat (Widget o Embebido)</td>
+                            <td class="cost-display" data-cost="100">$100.00</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div style="text-align: right; margin-top: 15px;">
-                <strong>Subtotal Canales (Mensual): <span class="gold-accent" id="channelSubtotal">$0.00 USD</span></strong>
+            <div class="text-end mt-3">
+                <strong>Subtotal Canales (Mensual): <span class="cost-display" id="channelSubtotal">$0.00 USD</span></strong>
             </div>
         </div>
 
-        <div class="module" id="module1">
-            <h2 class="module-title">2. Paquetes de Conversaciones</h2>
-            <p style="margin-bottom: 20px; color: #666;">Seleccione el paquete de conversaciones que mejor se adapte a sus necesidades. <strong>Incluye licencias de MindX Insights.</strong></p>
-            
-            <div class="table-container">
-                <table>
-                    <thead>
+        <!-- MÓDULO 2 -->
+        <div class="module" id="module2">
+            <h2 class="module-title">3. Paquetes de Conversaciones</h2>
+            <p class="mb-3 text-muted">Seleccione el paquete que mejor se adapte a sus necesidades. <strong>Incluye licencias de Dashboards de MINDX.</strong></p>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="table-dark">
                         <tr>
                             <th>Seleccionar</th>
                             <th>Paquete</th>
                             <th>Conversaciones</th>
-                            <th>Licencias MindX Insights</th>
+                            <th>Licencias Dashboards de MINDX</th>
                             <th>Precio (USD)</th>
+                            <th>Conv. Adicional (USD)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="radio" name="package" value="3500-262.50-1" onchange="calculatePackageCosts()"></td>
-                            <td>Básico</td>
-                            <td>3,500</td>
-                            <td class="gold-accent">1 licencia</td>
-                            <td class="cost-display">$262.50</td>
+                            <td><input type="radio" class="form-check-input" name="package" value="3500-283-1-0.075-Básico" onchange="calculatePackageCosts()"></td>
+                            <td>Básico</td><td>3,500</td><td class="cost-display">1</td><td class="cost-display">$283.00</td><td class="cost-display">$0.075</td>
                         </tr>
                         <tr>
-                            <td><input type="radio" name="package" value="5500-322.50-2" onchange="calculatePackageCosts()"></td>
-                            <td>Estándar</td>
-                            <td>5,500</td>
-                            <td class="gold-accent">2 licencias</td>
-                            <td class="cost-display">$322.50</td>
+                            <td><input type="radio" class="form-check-input" name="package" value="5500-343-1-0.059-Estándar" onchange="calculatePackageCosts()"></td>
+                            <td>Estándar</td><td>5,500</td><td class="cost-display">1</td><td class="cost-display">$343.00</td><td class="cost-display">$0.059</td>
                         </tr>
                         <tr>
-                            <td><input type="radio" name="package" value="8500-412.50-3" onchange="calculatePackageCosts()"></td>
-                            <td>Profesional</td>
-                            <td>8,500</td>
-                            <td class="gold-accent">3 licencias</td>
-                            <td class="cost-display">$412.50</td>
+                            <td><input type="radio" class="form-check-input" name="package" value="8500-453-2-0.049-Profesional" onchange="calculatePackageCosts()"></td>
+                            <td>Profesional</td><td>8,500</td><td class="cost-display">2</td><td class="cost-display">$453.00</td><td class="cost-display">$0.049</td>
+                        </tr>
+                         <tr>
+                            <td><input type="radio" class="form-check-input" name="package" value="10000-510-2-0.047-Empresarial" onchange="calculatePackageCosts()"></td>
+                            <td>Empresarial</td><td>10,000</td><td class="cost-display">2</td><td class="cost-display">$510.00</td><td class="cost-display">$0.047</td>
                         </tr>
                         <tr>
-                            <td><input type="radio" name="package" value="10000-469.75-4" onchange="calculatePackageCosts()"></td>
-                            <td>Empresarial</td>
-                            <td>10,000</td>
-                            <td class="gold-accent">4 licencias</td>
-                            <td class="cost-display">$469.75</td>
+                            <td><input type="radio" class="form-check-input" name="package" value="30000-1428-2-0.046-Corporativo I" onchange="calculatePackageCosts()"></td>
+                            <td>Corporativo I</td><td>30,000</td><td class="cost-display">2</td><td class="cost-display">$1,428.00</td><td class="cost-display">$0.046</td>
                         </tr>
                         <tr>
-                            <td><input type="radio" name="package" value="30000-1388.11-5" onchange="calculatePackageCosts()"></td>
-                            <td>Corporativo I</td>
-                            <td>30,000</td>
-                            <td class="gold-accent">5 licencias</td>
-                            <td class="cost-display">$1,388.11</td>
+                            <td><input type="radio" class="form-check-input" name="package" value="60000-2747-2-0.045-Corporativo II" onchange="calculatePackageCosts()"></td>
+                            <td>Corporativo II</td><td>60,000</td><td class="cost-display">2</td><td class="cost-display">$2,747.00</td><td class="cost-display">$0.045</td>
+                        </tr>
+                         <tr>
+                            <td><input type="radio" class="form-check-input" name="package" value="90000-3996-2-0.044-Corporativo III" onchange="calculatePackageCosts()"></td>
+                            <td>Corporativo III</td><td>90,000</td><td class="cost-display">2</td><td class="cost-display">$3,996.00</td><td class="cost-display">$0.044</td>
                         </tr>
                         <tr>
-                            <td><input type="radio" name="package" value="60000-2706.82-6" onchange="calculatePackageCosts()"></td>
-                            <td>Corporativo II</td>
-                            <td>60,000</td>
-                            <td class="gold-accent">6 licencias</td>
-                            <td class="cost-display">$2,706.82</td>
+                            <td><input type="radio" class="form-check-input" name="package" value="120000-5176-2-0.043-Enterprise I" onchange="calculatePackageCosts()"></td>
+                            <td>Enterprise I</td><td>120,000</td><td class="cost-display">2</td><td class="cost-display">$5,176.00</td><td class="cost-display">$0.043</td>
                         </tr>
-                        <tr>
-                            <td><input type="radio" name="package" value="90000-3956.12-7" onchange="calculatePackageCosts()"></td>
-                            <td>Corporativo III</td>
-                            <td>90,000</td>
-                            <td class="gold-accent">7 licencias</td>
-                            <td class="cost-display">$3,956.12</td>
-                        </tr>
-                        <tr>
-                            <td><input type="radio" name="package" value="120000-5136.01-8" onchange="calculatePackageCosts()"></td>
-                            <td>Enterprise I</td>
-                            <td>120,000</td>
-                            <td class="gold-accent">8 licencias</td>
-                            <td class="cost-display">$5,136.01</td>
-                        </tr>
-                        <tr>
-                            <td><input type="radio" name="package" value="150000-6246.50-9" onchange="calculatePackageCosts()"></td>
-                            <td>Enterprise II</td>
-                            <td>150,000</td>
-                            <td class="gold-accent">9 licencias</td>
-                            <td class="cost-display">$6,246.50</td>
+                         <tr>
+                            <td><input type="radio" class="form-check-input" name="package" value="150000-6287-2-0.042-Enterprise II" onchange="calculatePackageCosts()"></td>
+                            <td>Enterprise II</td><td>150,000</td><td class="cost-display">2</td><td class="cost-display">$6,287.00</td><td class="cost-display">$0.042</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            
-            <div style="text-align: right; margin-top: 15px;">
-                <strong>Subtotal Conversaciones (Mensual): <span class="gold-accent" id="packageSubtotal">$0.00 USD</span></strong>
+            <div class="input-group mt-3">
+                <label class="input-group-text" for="additionalConversations">Conversaciones Adicionales (fuera de paquete):</label>
+                <input type="number" class="form-control" id="additionalConversations" min="0" value="0" oninput="calculatePackageCosts()">
+            </div>
+            <div class="text-end mt-3">
+                <strong>Subtotal Paquete (Mensual): <span class="cost-display" id="packageSubtotal">$0.00 USD</span></strong>
             </div>
         </div>
 
-        <div class="module" id="module2">
-            <h2 class="module-title">3. Licencias Adicionales MindX Insights</h2>
-            <p style="margin-bottom: 20px; color: #666;">Su paquete incluye <span class="gold-accent" id="includedLicenses">0</span> licencias de MindX Insights. Puede agregar licencias adicionales por <span class="gold-accent">$25.5 USD</span> cada una (mensual).</p>
-            
-            <div class="input-group">
-                <label>Licencias adicionales de MindX Insights:</label>
-                <input type="number" id="additionalInsights" min="0" value="0" onchange="calculateInsightsCosts()">
-            </div>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Concepto</th>
-                            <th>Cantidad</th>
-                            <th>Precio Unitario</th>
-                            <th>Subtotal (USD)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Licencias incluidas en paquete</td>
-                            <td class="gold-accent" id="packageLicensesDisplay">0</td>
-                            <td>Incluido</td>
-                            <td class="cost-display">$0.00</td>
-                        </tr>
-                        <tr>
-                            <td>Licencias adicionales</td>
-                            <td class="gold-accent" id="additionalLicensesDisplay">0</td>
-                            <td>$25.50</td>
-                            <td class="cost-display" id="additionalInsightsCost">$0.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div style="text-align: right; margin-top: 15px;">
-                <strong>Subtotal MindX Insights (Mensual): <span class="gold-accent" id="insightsSubtotal">$0.00 USD</span></strong>
-            </div>
-        </div>
-
+        <!-- MÓDULO 3 -->
         <div class="module" id="module3">
-            <h2 class="module-title">4. Licencias de Agentes MindX</h2>
-            <p style="margin-bottom: 20px; color: #666;">Licencias de agentes para gestión avanzada. Cada licencia tiene un costo de <span class="gold-accent">$20 USD</span> mensual.</p>
-            
-            <div class="input-group">
-                <label>Cantidad de licencias de Agentes MindX:</label>
-                <input type="number" id="agentLicenses" min="0" value="0" onchange="calculateAgentCosts()">
+            <h2 class="module-title">4. Licencias Adicionales Dashboards de MINDX</h2>
+            <p class="mb-3 text-muted">Su paquete incluye <strong class="cost-display" id="includedLicenses">0</strong> licencias. Puede agregar más por <strong class="cost-display">USD $20</strong> c/u (mensual).</p>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="additionalInsights">Licencias adicionales de Dashboards de MINDX:</label>
+                <input type="number" class="form-control" id="additionalInsights" min="0" value="0" oninput="calculateInsightsCosts()">
             </div>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Concepto</th>
-                            <th>Cantidad</th>
-                            <th>Precio Unitario</th>
-                            <th>Subtotal (USD)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Licencias de Agentes MindX</td>
-                            <td class="gold-accent" id="agentLicensesDisplay">0</td>
-                            <td>$20.00</td>
-                            <td class="cost-display" id="agentsCost">$0.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div style="text-align: right; margin-top: 15px;">
-                <strong>Subtotal Agentes MindX (Mensual): <span class="gold-accent" id="agentsSubtotal">$0.00 USD</span></strong>
+            <div class="text-end mt-3">
+                <strong>Subtotal Dashboards de MINDX Adicionales (Mensual): <span class="cost-display" id="insightsSubtotal">$0.00 USD</span></strong>
             </div>
         </div>
 
+        <!-- MÓDULO 4 -->
         <div class="module" id="module4">
-            <h2 class="module-title">5. Inteligencia Artificial Generativa</h2>
-            
-            <div class="input-group">
-                <label>
-                    <input type="checkbox" id="includeAI" onchange="toggleAISection()">
-                    ¿Desea incluir IA Generativa en su solución?
-                </label>
+            <h2 class="module-title">5. Licencias de Agentes MindX</h2>
+            <p class="mb-3 text-muted">Licencias para atención humana. Cada una tiene un costo de <strong class="cost-display">$20 USD</strong> mensual.</p>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="agentLicenses">Cantidad de licencias de Agentes MindX:</label>
+                <input type="number" class="form-control" id="agentLicenses" min="0" value="0" oninput="calculateAgentCosts()">
             </div>
-
+            <div id="five9AgentNote" class="alert alert-info mt-3" style="display: none;">
+                <strong>Nota Importante:</strong> Si su propuesta incluye <strong>Five9</strong>, no es necesario que los agentes adquieran licencias adicionales de Agente MINDX. Las interacciones de chat para los agentes se gestionarán directamente dentro de la plataforma Five9, optimizando su operación y costos. Las licencias de Five9 ya cubren esta funcionalidad.
+            </div>
+            <div class="text-end mt-3">
+                <strong>Subtotal Agentes (Mensual): <span class="cost-display" id="agentsSubtotal">$0.00 USD</span></strong>
+            </div>
+        </div>
+        
+        <!-- MÓDULO 5 -->
+        <div class="module" id="module5">
+            <h2 class="module-title">6. Inteligencia Artificial Generativa</h2>
+            <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="includeAI" onchange="toggleAISection()">
+                <label class="form-check-label" for="includeAI">¿Desea incluir IA Generativa en su solución?</label>
+            </div>
             <div id="aiDetails" style="display: none;">
-                <div class="input-group">
-                    <label>Mensajes promedio por conversación:</label>
-                    <input type="number" id="messagesPerConversation" min="1" value="10" onchange="calculateAICosts()">
+                <p class="mb-3 text-muted">Configure los parámetros para estimar el costo de la IA. El costo final dependerá del consumo real.</p>
+
+                <div class="bg-light border border-secondary rounded p-3 mb-4">
+                    <h3 class="text-center text-secondary mb-3">📋 Modelo de Precios IA Generativa</h3>
+                    <div class="row row-cols-1 row-cols-md-2 g-3 mb-3">
+                        <div class="col">
+                            <div class="card text-center h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-secondary">Carga de Información</h5>
+                                    <p class="card-text display-6 cost-display">$0.093</p>
+                                    <p class="card-text"><small class="text-muted">por MB (Pago Único)</small></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-secondary">Almacenamiento</h5>
+                                    <p class="card-text display-6 cost-display">$0.1</p>
+                                    <p class="card-text"><small class="text-muted">por GB/Día</small></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-secondary">Consumo por Tokens</h5>
+                                    <p class="card-text display-6 cost-display">$6.3</p>
+                                    <p class="card-text"><small class="text-muted">por 1 Millón de Tokens</small></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-center h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-secondary">Consumo por Mensajes</h5>
+                                    <p class="card-text display-6 cost-display">$111</p>
+                                    <p class="card-text"><small class="text-muted">por 20,000 Mensajes</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <label>Mensajes que requerirán IA Generativa:</label>
-                    <input type="number" id="aiMessages" min="0" value="5" onchange="calculateAICosts()">
+                <div class="border rounded p-3">
+                    <h3 class="text-secondary mb-3 fs-5">⚙️ Configuración de su Proyecto</h3>
+                    
+                    <div class="mb-4">
+                        <h4 class="text-secondary fs-6">📚 Base de Conocimiento</h4>
+                        <div class="input-group mb-2">
+                            <label class="input-group-text" for="fileSize">Tamaño del archivo (MB):</label>
+                            <input type="number" class="form-control" id="fileSize" min="1" step="1" value="100" oninput="calculateAICosts()">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-text" for="updateFrequency">Frecuencia de actualización:</label>
+                            <select class="form-select" id="updateFrequency" onchange="calculateAICosts()">
+                                <option value="12">Mensual</option>
+                                <option value="4">Trimestral</option>
+                                <option value="2">Semestral</option>
+                                <option value="1">Anual</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4 class="text-secondary fs-6">💰 Modelo de Facturación</h4>
+                        <div class="input-group">
+                             <label class="input-group-text" for="billingModel">Facturar por:</label>
+                            <select class="form-select" id="billingModel" onchange="toggleBillingModel()">
+                                <option value="messages">Mensajes (Más Simple)</option>
+                                <option value="tokens">Tokens (Más Preciso)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="messagesModel">
+                        <h4 class="text-secondary fs-6">📱 Estimación por Mensajes</h4>
+                        <div class="input-group">
+                             <label class="input-group-text" for="aiMessagesMsg">Mensajes IA / Conversación:</label>
+                            <input type="number" class="form-control" id="aiMessagesMsg" min="1" value="3" oninput="calculateAICosts()">
+                        </div>
+                    </div>
+
+                    <div id="tokensModel" style="display: none;">
+                        <h4 class="text-secondary fs-6">🎯 Estimación por Tokens</h4>
+                        <div class="input-group mb-2">
+                            <label class="input-group-text" for="aiMessagesTokens">Mensajes IA / Conversación:</label>
+                            <input type="number" class="form-control" id="aiMessagesTokens" min="1" value="3" oninput="calculateAICosts()">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-text" for="tokensPerMessage">Tokens / Mensaje:</label>
+                            <input type="number" class="form-control" id="tokensPerMessage" min="100" value="350" step="50" oninput="calculateAICosts()">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <label>Tamaño del archivo de conocimiento (MB):</label>
-                    <input type="number" id="fileSize" min="0.1" step="0.1" value="10" onchange="calculateAICosts()">
+                <div class="bg-dark text-white rounded p-3 mt-4">
+                    <h4 class="text-center cost-display mb-3">📊 Resumen de Costos Estimados de IA</h4>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="fs-6 text-muted">Conversaciones IA/mes</div>
+                            <div class="fs-4 fw-bold" id="aiConversationsEstimate">0</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fs-6 text-muted">Mensajes IA/mes</div>
+                            <div class="fs-4 fw-bold" id="aiMessagesEstimate">0</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="fs-6 text-muted" id="consumptionLabel">Consumo estimado</div>
+                            <div class="fs-4 fw-bold" id="consumptionEstimate">0</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <label>Frecuencia de actualización del archivo:</label>
-                    <select id="updateFrequency" onchange="calculateAICosts()">
-                        <option value="1">Mensual</option>
-                        <option value="3">Trimestral</option>
-                        <option value="6">Semestral</option>
-                        <option value="12">Anual</option>
-                    </select>
-                </div>
-
-                <div class="table-container" style="margin-top: 20px;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Componente IA</th>
-                                <th>Descripción</th>
-                                <th>Tipo de Costo</th>
-                                <th>Valor (USD)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Carga de Información</td>
-                                <td>$0.093 por MB × frecuencia anual</td>
-                                <td>Anual</td>
-                                <td class="cost-display" id="loadingCost">$0.00</td>
-                            </tr>
-                            <tr>
-                                <td>Almacenamiento</td>
-                                <td>Archivo × $1.7 (por MB)</td>
-                                <td>Mensual</td>
-                                <td class="cost-display" id="storageCost">$0.00</td>
-                            </tr>
-                            <tr>
-                                <td>Consumo de Tokens</td>
-                                <td>$6.3 por millón de tokens</td>
-                                <td>Mensual</td>
-                                <td class="cost-display" id="tokenCost">$0.00</td>
-                            </tr>
-                            <tr>
-                                <td>Modelo de Mensajes</td>
-                                <td>$111 por cada 20,000 mensajes</td>
-                                <td>Mensual</td>
-                                <td class="cost-display" id="messageCost">$0.00</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div style="text-align: right; margin-top: 15px;">
-                    <div><strong>Subtotal IA Carga (Anual): <span class="gold-accent" id="aiLoadingSubtotal">$0.00 USD</span></strong></div>
-                    <div><strong>Subtotal IA Operación (Mensual): <span class="gold-accent" id="aiMonthlySubtotal">$0.00 USD</span></strong></div>
+                <div class="text-end mt-3">
+                    <div class="mb-1"><strong>💾 Carga IA (Pago Inicial): <span class="cost-display" id="aiLoadingSubtotal">$0.00 USD</span></strong></div>
+                    <div class="mb-1"><strong>🗄️ Almacenamiento (Mensual): <span class="cost-display" id="aiStorageSubtotal">$0.00 USD</span></strong></div>
+                    <div class="mb-1"><strong>⚡ Consumo IA (Mensual): <span class="cost-display" id="aiUsageSubtotal">$0.00 USD</span></strong></div>
+                    <hr>
+                    <div class="fs-5"><strong>🤖 Total IA (Mensual): <span class="cost-display" id="aiMonthlySubtotal">$0.00 USD</span></strong></div>
                 </div>
             </div>
         </div>
-
-        <div class="module" id="module5">
-            <h2 class="module-title">Resumen de Costos</h2>
-            
-            <div class="table-container">
-                <table class="summary-table">
-                    <thead>
+        
+        <!-- MÓDULO 6 -->
+        <div class="module" id="module6">
+            <h2 class="module-title">7. Notificaciones Outbound de WhatsApp</h2>
+            <p class="mb-3 text-muted">Estime la cantidad de mensajes salientes (plantillas) por mes.</p>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="table-dark">
                         <tr>
-                            <th>Concepto</th>
-                            <th>Cantidad</th>
+                            <th>Tipo de Plantilla</th>
+                            <th>Valor/Notificación (USD)</th>
+                            <th>Cantidad Mensual</th>
                             <th>Costo Mensual (USD)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Canales Digitales</td>
-                            <td class="gold-accent" id="summaryChannelsQty">0</td>
-                            <td class="cost-display" id="summaryChannelsMonthly">$0.00</td>
+                            <td>Marketing</td>
+                            <td class="cost-display">$0.0150</td>
+                            <td><input type="number" class="form-control" id="notifMarketingQty" min="0" value="0" oninput="calculateNotificationCosts()"></td>
+                            <td class="cost-display" id="notifMarketingCost">$0.00</td>
                         </tr>
                         <tr>
-                            <td>Paquete de Conversaciones</td>
-                            <td class="gold-accent" id="summaryPackageQty">0</td>
-                            <td class="cost-display" id="summaryPackageMonthly">$0.00</td>
+                            <td>Utility</td>
+                            <td class="cost-display">$0.0024</td>
+                            <td><input type="number" class="form-control" id="notifUtilityQty" min="0" value="0" oninput="calculateNotificationCosts()"></td>
+                            <td class="cost-display" id="notifUtilityCost">$0.00</td>
                         </tr>
                         <tr>
-                            <td>MindX Insights Adicionales</td>
-                            <td class="gold-accent" id="summaryInsightsQty">0</td>
-                            <td class="cost-display" id="summaryInsightsMonthly">$0.00</td>
-                        </tr>
-                        <tr>
-                            <td>Agentes MindX</td>
-                            <td class="gold-accent" id="summaryAgentsQty">0</td>
-                            <td class="cost-display" id="summaryAgentsMonthly">$0.00</td>
-                        </tr>
-                        <tr>
-                            <td>IA - Operación Mensual</td>
-                            <td class="gold-accent" id="summaryAIOperationQty">0</td>
-                            <td class="cost-display" id="summaryAIMonthly">$0.00</td>
-                        </tr>
-                        <tr class="total-row">
-                            <td><strong>SUBTOTAL MENSUAL RECURRENTE</strong></td>
-                            <td><strong>-</strong></td>
-                            <td class="cost-display"><strong id="totalMonthlyRecurrent">$0.00</strong></td>
+                            <td>Authentication</td>
+                            <td class="cost-display">$0.0092</td>
+                            <td><input type="number" class="form-control" id="notifAuthenticationQty" min="0" value="0" oninput="calculateNotificationCosts()"></td>
+                            <td class="cost-display" id="notifAuthenticationCost">$0.00</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <div class="text-end mt-3">
+                <strong>Subtotal Notificaciones (Mensual): <span class="cost-display" id="notificationSubtotal">$0.00 USD</span></strong>
+            </div>
+        </div>
 
-            <div style="margin-top: 30px;">
-                <h3 style="color: #2c2c2c; margin-bottom: 20px; font-weight: 700;">Resumen Total de Inversión</h3>
-                
-                <div class="input-group" style="margin-bottom: 20px;">
-                    <label>TRM (Tasa Representativa del Mercado):</label>
-                    <input type="number" id="trm" min="0" step="0.01" value="4200" oninput="calculateCurrencyConversion()" placeholder="Ej: 4200">
-                    <span style="color: #666; margin-left: 10px;">COP por USD</span>
+        <!-- MÓDULO 7 -->
+        <div class="module" id="module7">
+            <h2 class="module-title">8. Servicios de Implementación y Hardware</h2>
+            
+            <div class="input-group mb-4">
+                <label class="input-group-text" for="trm">Tasa de Cambio (TRM) de Referencia (COP/USD):</label>
+                <input type="number" class="form-control" id="trm" value="4200" step="50" oninput="calculateSBCCosts()">
+            </div>
+
+            <div id="five9ImplementationSection" style="display: none;" class="mb-4 p-3 bg-light border rounded">
+                <h3 class="fs-5">Servicios Profesionales Five9</h3>
+                <p class="text-muted small">Se incluye un costo implícito de servicios profesionales para la implementación de Five9.</p>
+                <div class="text-end">
+                    <strong>Costo (Pago Único): <span class="cost-display" id="five9ProfessionalServicesCost">$4,500.00 USD</span></strong>
                 </div>
+            </div>
 
-                <div class="table-container">
-                    <table class="summary-table">
-                        <thead>
+            <h3 class="fs-5">Servicios Profesionales MINDX</h3>
+            <p class="text-muted small">Elija un paquete de implementación para el diseño y desarrollo de sus flujos conversacionales (Pago Único).</p>
+            <div class="alert alert-info small">
+                <strong>Nota:</strong> Los paquetes de implementación son acumulativos. Es decir, el <strong>Tipo B</strong> incluye todo lo del Tipo A, y el <strong>Tipo C</strong> incluye todo lo del Tipo B. El <strong>Tipo D</strong> es para un alcance personalizado.
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3 mb-4">
+                <div class="col">
+                    <div class="card h-100 implementation-card" onclick="selectImplementationType('A')">
+                        <input type="radio" name="implementationType" value="A-1400-40-Básico" id="implTypeA" class="d-none">
+                        <div class="card-header implementation-header">
+                            <h3>TIPO A</h3>
+                            <div class="implementation-subtitle">Flujos Básicos</div>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="implementation-price">$1,400 USD</div>
+                            <div class="implementation-hours text-muted mb-3">40 horas incluidas</div>
+                            <ul class="list-unstyled text-start implementation-features">
+                                <li class="feature-item">Navegación por botones</li>
+                                <li class="feature-item">Respuestas preestablecidas</li>
+                                <li class="feature-item">Sin integraciones externas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 implementation-card" onclick="selectImplementationType('B')">
+                        <input type="radio" name="implementationType" value="B-2800-80-Intermedio" id="implTypeB" class="d-none">
+                        <div class="card-header implementation-header">
+                            <h3>TIPO B</h3>
+                            <div class="implementation-subtitle">Flujos con Integraciones</div>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="implementation-price">$2,800 USD</div>
+                            <div class="implementation-hours text-muted mb-3">80 horas incluidas</div>
+                            <ul class="list-unstyled text-start implementation-features">
+                                <li class="feature-item">Consumo de APIs/Webservices</li>
+                                <li class="feature-item">Conexión a BD/CRM</li>
+                                <li class="feature-item">Validaciones complejas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 implementation-card" onclick="selectImplementationType('C')">
+                        <input type="radio" name="implementationType" value="C-4200-120-Avanzado" id="implTypeC" class="d-none">
+                        <div class="card-header implementation-header">
+                            <h3>TIPO C</h3>
+                            <div class="implementation-subtitle">IA Generativa</div>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="implementation-price">$4,200 USD</div>
+                            <div class="implementation-hours text-muted mb-3">120 horas incluidas</div>
+                            <ul class="list-unstyled text-start implementation-features">
+                                <li class="feature-item">IA Generativa integrada</li>
+                                <li class="feature-item">Base de conocimiento</li>
+                                <li class="feature-item">Respuestas contextuales</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 implementation-card" onclick="selectImplementationType('D')">
+                        <input type="radio" name="implementationType" value="D-custom-custom-Custom" id="implTypeD" class="d-none">
+                        <div class="card-header implementation-header">
+                            <h3>TIPO D</h3>
+                            <div class="implementation-subtitle">Solución Custom</div>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="implementation-price">A cotizar</div>
+                            <div class="implementation-hours text-muted mb-3">Horas variables</div>
+                            <ul class="list-unstyled text-start implementation-features">
+                                <li class="feature-item">Desarrollo a medida</li>
+                                <li class="feature-item">Requisitos específicos</li>
+                                <li class="feature-item">Consultoría especializada</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="customImplementationSection" style="display: none;" class="p-3 bg-light border rounded mb-4">
+                <h3 class="fs-6">Configuración Personalizada</h3>
+                <div class="input-group mb-2"><label class="input-group-text">Horas estimadas:</label><input type="number" class="form-control" id="customHours" min="1" value="40" oninput="calculateImplementationCosts()"></div>
+                <div class="input-group"><label class="input-group-text">Tarifa por hora (USD):</label><input type="number" class="form-control" id="hourlyRate" min="1" value="35" step="1" oninput="calculateImplementationCosts()"></div>
+            </div>
+            <div class="text-end">
+                <strong>Subtotal Implementación MINDX (Pago Único): <span class="cost-display" id="mindxImplementationSubtotal">$0.00 USD</span></strong>
+            </div>
+
+            <div class="mt-4 p-3 bg-light border rounded">
+                <h3 class="fs-5">Hardware y Servicios SBC</h3>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="includeSBC" onchange="toggleSBCSection()">
+                    <label class="form-check-label" for="includeSBC">¿Desea incluir SBC (Session Border Controller)?</label>
+                </div>
+                <div id="sbcDetails" style="display: none;" class="mt-3">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Concepto SBC</th>
+                                    <th>Valor Unitario</th>
+                                    <th>Cantidad</th>
+                                    <th>Costo (Pago Único)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>SBC KHOMP X 30 SESIONES Y SOPORTE 1Y</td>
+                                    <td class="cost-display">$1,700.00 USD</td>
+                                    <td><input type="number" class="form-control" id="sbcKhompQty" min="0" value="0" oninput="calculateSBCCosts()"></td>
+                                    <td class="cost-display" id="sbcKhompTotal">$0.00 USD</td>
+                                </tr>
+                                <tr>
+                                    <td>Bolsa de 50 horas de implementación SBC</td>
+                                    <td class="cost-display">$2,400.00 USD</td>
+                                    <td><input type="number" class="form-control" id="sbcHoursBagQty" min="0" value="0" oninput="calculateSBCCosts()"></td>
+                                    <td class="cost-display" id="sbcHoursBagTotal">$0.00 USD</td>
+                                </tr>
+                                <tr>
+                                    <td>Hora de desarrollo / Implementación adicional SBC</td>
+                                    <td class="cost-display">$150,000.00 COP</td>
+                                    <td><input type="number" class="form-control" id="sbcAdditionalHoursQty" min="0" value="0" oninput="calculateSBCCosts()"></td>
+                                    <td class="cost-display" id="sbcAdditionalHoursTotal">$0.00 USD</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-end mt-3">
+                        <strong>Subtotal SBC (Pago Único): <span class="cost-display" id="sbcSubtotal">$0.00 USD</span></strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-end mt-4 fs-5 border-top pt-3">
+                <strong>Total Implementación y Hardware (Pago Único): <span class="cost-display" id="totalOneTimeImplementationCost">$0.00 USD</span></strong>
+            </div>
+        </div>
+        
+        <!-- MÓDULO 8: RESUMEN FINAL -->
+        <div class="module" id="module8">
+            <h2 class="module-title">9. Resumen de Costos</h2>
+            
+            <div class="summary-section">
+                <h4>Costos Mensuales Recurrentes</h4>
+                <div class="table-responsive">
+                    <table class="table summary-table">
+                        <thead class="table-dark">
                             <tr>
                                 <th>Concepto</th>
-                                <th>Valor USD</th>
-                                <th>Valor COP</th>
+                                <th>Detalle</th>
+                                <th>Costo Mensual (USD)</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>IA - Carga Inicial (Anual)</td>
-                                <td class="cost-display" id="totalAILoadingUSD">$0.00</td>
-                                <td class="cost-display" id="totalAILoadingCOP">$0</td>
-                            </tr>
-                            <tr>
-                                <td>Total Mensual Recurrente</td>
-                                <td class="cost-display" id="totalMonthlyUSD">$0.00</td>
-                                <td class="cost-display" id="totalMonthlyCOP">$0</td>
-                            </tr>
-                            <tr class="total-row">
-                                <td><strong>Total Anual (12 meses de recurrente + carga IA)</strong></td>
-                                <td class="cost-display"><strong id="totalAnnualUSD">$0.00</strong></td>
-                                <td class="cost-display"><strong id="totalAnnualCOP">$0</strong></td>
-                            </tr>
+                        <tbody id="summaryMonthlyCostsBody">
                         </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="2"><strong>Total Mensual Recurrente (USD)</strong></td>
+                                <td class="cost-display" id="summaryTotalMonthlyUSD">$0.00</td>
+                            </tr>
+                             <tr>
+                                <td colspan="2"><strong>Total Mensual Recurrente (COP)</strong> <small>(Aprox.)</small></td>
+                                <td class="cost-display" id="summaryTotalMonthlyCOP">$0</td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
-
-            <div class="note">
-                <p><strong>📋 Notas Importantes:</strong></p>
-                <ul style="margin-top: 10px; margin-left: 20px;">
-                    <li>Los servicios están excluidos de IVA por ser servicios en la nube</li>
-                    <li>Se incluye soporte local 24/7 que cubre incidencias y caídas totales del servicio</li>
-                    <li>Los costos de IA Generativa varían según el uso real del sistema</li>
-                    <li>Los paquetes personalizados requieren validación con el Arquitecto de Diferenciación</li>
-                    <li>Los costos de carga de IA se calculan anualmente según la frecuencia de actualización (mensual x12, trimestral x4, semestral x2, anual x1)</li>
-                    <li>La TRM es solo para referencia, verificar tasa actual al momento de la facturación</li>
-                    <li>El total anual incluye 12 meses de servicios recurrentes más el costo de carga inicial de IA</li>
-                </ul>
+    
+            <div class="summary-section">
+                <h4>Pagos Únicos (Implementación y Hardware)</h4>
+                <div class="table-responsive">
+                    <table class="table summary-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Valor USD</th>
+                                <th>Valor COP (Aprox.)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summaryOneTimeCostsBody">
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td><strong>Total Pagos Únicos</strong></td>
+                                <td class="cost-display" id="summaryTotalOneTimeUSD">$0.00</td>
+                                <td class="cost-display" id="summaryTotalOneTimeCOP">$0</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+    
+            <div class="grand-total-section">
+                <h4>Total Inversión Contrato a 12 Meses</h4>
+                <div class="display-4" id="summaryTotalAnnualUSD">$0.00 USD</div>
+                <div class="fs-4" id="summaryTotalAnnualCOP">$0 COP</div>
+                <p class="small mt-2 mb-0">(Calculado con TRM de Referencia: <span id="summaryTrmValue">4200</span> COP/USD)</p>
             </div>
         </div>
 
-        <div class="navigation-buttons">
-            <button class="nav-btn" id="prevBtn" onclick="previousStep()" disabled>⬅ Anterior</button>
-            <button class="nav-btn" id="nextBtn" onclick="nextStep()">Siguiente ➡</button>
+        <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousStep()" disabled>⬅ Anterior</button>
+            <button class="btn btn-gold" id="nextBtn" onclick="nextStep()">Siguiente ➡</button>
         </div>
     </div>
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3VeYyVcO19YitWZXY4CVQ+8OcXyPkCPzQLK0Hi+eLzHegbqipIUYl1" crossorigin="anonymous"></script>
     <script>
         let currentStep = 0;
-        let channelCost = 0;
-        let channelsSelected = 0;
-        let packageCost = 0;
-        let packageConversations = 0;
-        let packageLicenses = 0;
-        let additionalInsightsCost = 0;
-        let additionalInsightsQty = 0;
-        let agentsCost = 0;
-        let agentsQty = 0;
-        let aiLoadingCost = 0;
-        let aiMonthlyCost = 0;
-        let aiDetailsIncluded = false; // Flag para saber si la IA Generativa está seleccionada
+        const TOTAL_MODULES = 9; // 9 pasos (módulos 0 a 8)
 
-        const TRM_DEFAULT = 4200; // Valor por defecto de TRM
+        // Variables globales para almacenar costos y selecciones
+        let includeMindX = true;
+        let includeFive9 = false;
+        
+        // Five9 Costs
+        let five9AgentsQty = 0;
+        let five9SupervisorsQty = 0;
+        let five9AdminsQty = 0;
+        let five9ChatAgentQty = 0;
+        let five9EmailAgentQty = 0;
+        let five9NCX1Qty = 0;
+        let five9SIPInboundQty = 0;
+        let five9SIPOutboundQty = 0;
+        let five9RecStorageQty = 0;
+        let five9CallLogStorageQty = 0;
+        let five9SalesforceQty = 0;
+        let five9UCAdapterQty = 0;
+        let five9AgentAssistQty = 0;
+        let five9MonthlyCost = 0;
+        const FIVE9_PROFESSIONAL_SERVICES_COST = 4500;
+
+        // MINDX Costs
+        let channelCost = 0, channelsSelected = 0, selectedChannelNames = [];
+        let packageCost = 0, packageConversations = 0, packageLicenses = 0, selectedPackageName = '';
+        let additionalConversationCostPerUnit = 0, additionalConversationsQty = 0;
+        let additionalInsightsCost = 0, additionalInsightsQty = 0;
+        let agentsCost = 0, agentsQty = 0;
+        let aiStorageCost = 0, aiUsageCost = 0, aiLoadingCost = 0, aiMonthlyCost = 0, aiDetailsIncluded = false;
+        let notificationCost = 0, totalNotificationsQty = 0;
+        let mindxImplementationCost = 0, selectedImplementationType = '', mindxImplementationHours = 0;
+        
+        // SBC Costs
+        let includeSBC = false;
+        let sbcKhompQty = 0;
+        let sbcHoursBagQty = 0;
+        let sbcAdditionalHoursQty = 0;
+        let sbcTotalOneTimeCost = 0;
+
+        // Global Constants
+        const FIVE9_PRICES = {
+            'VCC Agent Seat - Blended': 60.89,
+            'VCC Supervisor': 60.89,
+            'VCC Administrator': 60.89,
+            'Chat Agent': 3.38,
+            'Email Agent': 3.38,
+            'NCX1 Voice + Email + Adv. Chat': 67.66,
+            'SIP Inbound Flat Rate': 101.49,
+            'SIP Outbound (No Backup)': 101.49,
+            'VCC Recording Storage - 2 Months': 0.95,
+            'VCC Call Log Storage - 3 Months': 0.51,
+            'Salesforce Adapter': 10.15,
+            'Five9 UC Adapter - MS Teams / Zoom': 10.15,
+            'Agent Assist Standard': 50.74
+        };
+        const INSIGHTS_LICENSE_COST = 20;
+        const AGENT_LICENSE_COST = 20;
+        const TRM_DEFAULT = 4200;
+        const NOTIFICATION_PRICES = { marketing: 0.0150, utility: 0.0024, authentication: 0.0092 };
+        const SBC_PRICES = {
+            'SBC KHOMP X 30 SESIONES Y SOPORTE 1Y': 1700,
+            'Bolsa de 50 horas de implementación SBC': 2400,
+            'Hora de desarrollo / Implementación adicional SBC (COP)': 150000 
+        };
 
         function updateFavicon(step) {
             const favicon = document.getElementById('favicon');
-            const stepNumber = step + 1;
-            favicon.href = `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3ccircle cx='50' cy='50' r='40' fill='%23d4af37'/%3e%3ctext x='50' y='60' text-anchor='middle' fill='%23000' font-size='30' font-weight='bold'%3e${stepNumber}%3c/text%3e%3c/svg%3e`;
+            favicon.href = `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3ccircle cx='50' cy='50' r='40' fill='%23d4af37'/%3e%3ctext x='50' y='60' text-anchor='middle' fill='%23fff' font-size='30' font-weight='bold'%3e${step + 1}%3c/text%3e%3c/svg%3e`;
         }
 
         function goToStep(step) {
-            // Ocultar módulo actual
-            document.getElementById(`module${currentStep}`).classList.remove('active');
-            
-            // Mostrar nuevo módulo
+            if (step < 0 || step >= TOTAL_MODULES) return;
+
+            document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
             document.getElementById(`module${step}`).classList.add('active');
             
-            // Actualizar botones de navegación de pasos
-            const buttons = document.querySelectorAll('.step-button');
-            buttons.forEach((btn, index) => {
-                btn.classList.remove('active');
-                if (index < step) {
-                    btn.classList.add('completed');
-                } else {
-                    btn.classList.remove('completed');
+            if (step === 8) {
+                updateSummaryPage();
+            }
+
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            navLinks.forEach((link, index) => {
+                link.classList.remove('active');
+                if (index === step) {
+                    link.classList.add('active');
                 }
             });
-            buttons[step].classList.add('active');
             
-            // Actualizar barra de progreso
+            const summaryNavLink = document.getElementById('summaryNavLink');
+            if(summaryNavLink) {
+                summaryNavLink.style.display = (step >= TOTAL_MODULES - 2) ? 'block' : 'none';
+            }
+
             const progressFill = document.getElementById('progressFill');
-            const progress = ((step + 1) / 6) * 100;
-            progressFill.style.width = `${progress}%`;
+            const progressPercentage = TOTAL_MODULES > 1 ? (step / (TOTAL_MODULES - 1)) * 100 : 0;
+            progressFill.style.width = `${progressPercentage}%`;
+            progressFill.setAttribute('aria-valuenow', progressPercentage);
             
-            // Actualizar favicon
             updateFavicon(step);
             
-            // Actualizar botones de navegación (Anterior/Siguiente)
             document.getElementById('prevBtn').disabled = step === 0;
-            document.getElementById('nextBtn').textContent = step === 5 ? 'Finalizar' : 'Siguiente ➡';
+            document.getElementById('nextBtn').disabled = (step === TOTAL_MODULES - 1);
             
             currentStep = step;
-
-            // Recalcular todo al cambiar de paso, especialmente al ir al resumen
-            if (currentStep === 5) {
-                updateSummary();
-                calculateCurrencyConversion();
-            }
+            updateModuleDisplayLogic(); 
         }
 
         function nextStep() {
-            if (currentStep < 5) {
+            if (currentStep < TOTAL_MODULES - 1) {
                 goToStep(currentStep + 1);
             }
         }
@@ -864,232 +1029,510 @@
             }
         }
 
-        function calculateChannelCosts() {
-            const channels = ['whatsapp', 'telegram', 'facebook', 'instagram'];
-            let selectedCount = 0;
-            
-            channels.forEach(channel => {
-                if (document.getElementById(channel).checked) {
-                    selectedCount++;
-                }
-            });
+        function formatCurrency(value, currency = 'USD') {
+            const options = { style: 'currency', currency, minimumFractionDigits: 2 };
+            if (currency === 'COP') {
+                options.minimumFractionDigits = 0;
+                options.maximumFractionDigits = 0;
+            }
+            return new Intl.NumberFormat('es-CO', options).format(value);
+        }
+        
+        function handleProductSelection() {
+            includeMindX = document.getElementById('includeMindX').checked;
+            includeFive9 = document.getElementById('includeFive9').checked;
 
-            channelsSelected = selectedCount;
-            // El primer canal es gratuito, los adicionales son $100 mensual cada uno
-            channelCost = selectedCount > 0 ? (selectedCount - 1) * 100 : 0;
+            document.getElementById('five9Details').style.display = includeFive9 ? 'block' : 'none';
+            document.getElementById('five9ImplementationSection').style.display = includeFive9 ? 'block' : 'none';
+
+            if (!includeMindX && !includeFive9) {
+                alert("Debe seleccionar al menos un producto (MINDX o Five9).");
+                if (!includeMindX) document.getElementById('includeMindX').checked = true;
+                handleProductSelection(); 
+                return;
+            }
             
-            // Actualizar la visualización de costos en la tabla de selección
-            const rows = document.querySelectorAll('#module0 table tbody tr');
-            let channelIndex = 0;
-            channels.forEach(channel => {
-                const checkbox = document.getElementById(channel);
-                const costCell = rows[channelIndex].querySelector('.cost-display');
+            calculateFive9Costs(); 
+            calculateImplementationCosts(); 
+            updateModuleDisplayLogic(); 
+        }
+
+        function updateModuleDisplayLogic() {
+            const agentLicensesInput = document.getElementById('agentLicenses');
+            const five9AgentNote = document.getElementById('five9AgentNote');
+
+            if (includeFive9) {
+                agentLicensesInput.disabled = true;
+                agentLicensesInput.value = 0; 
+                agentsCost = 0; 
+                five9AgentNote.style.display = 'block'; 
+            } else {
+                agentLicensesInput.disabled = false;
+                five9AgentNote.style.display = 'none'; 
+            }
+            calculateAgentCosts(); 
+
+            // Nav link visibility
+            for (let i = 1; i <= 7; i++) {
+                const navLink = document.getElementById(`navLink${i}`);
+                if (navLink) {
+                    if (i >= 1 && i <= 6) { // MINDX modules
+                        navLink.style.display = includeMindX ? 'block' : 'none';
+                    } else if (i === 7) { // Implementation module
+                        navLink.style.display = (includeMindX || includeFive9 || includeSBC) ? 'block' : 'none';
+                    }
+                }
+            }
+        }
+
+        function calculateFive9Costs() {
+            if (!includeFive9) {
+                five9MonthlyCost = 0;
+            } else {
+                five9AgentsQty = parseInt(document.getElementById('five9Agents').value) || 0;
+                five9SupervisorsQty = parseInt(document.getElementById('five9Supervisors').value) || 0;
+                five9AdminsQty = parseInt(document.getElementById('five9Admins').value) || 0;
+                five9ChatAgentQty = parseInt(document.getElementById('five9ChatAgent').value) || 0;
+                five9EmailAgentQty = parseInt(document.getElementById('five9EmailAgent').value) || 0;
+                five9NCX1Qty = parseInt(document.getElementById('five9NCX1').value) || 0;
+                five9SIPInboundQty = parseInt(document.getElementById('five9SIPInbound').value) || 0;
+                five9SIPOutboundQty = parseInt(document.getElementById('five9SIPOutbound').value) || 0;
+                five9RecStorageQty = parseInt(document.getElementById('five9RecStorage').value) || 0;
+                five9CallLogStorageQty = parseInt(document.getElementById('five9CallLogStorage').value) || 0;
+                five9SalesforceQty = parseInt(document.getElementById('five9Salesforce').value) || 0;
+                five9UCAdapterQty = parseInt(document.getElementById('five9UCAdapter').value) || 0;
+                five9AgentAssistQty = parseInt(document.getElementById('five9AgentAssist').value) || 0;
+
+                let currentFive9Cost = 0;
+                currentFive9Cost += five9AgentsQty * FIVE9_PRICES['VCC Agent Seat - Blended'];
+                currentFive9Cost += five9SupervisorsQty * FIVE9_PRICES['VCC Supervisor'];
+                currentFive9Cost += five9AdminsQty * FIVE9_PRICES['VCC Administrator'];
+                currentFive9Cost += five9ChatAgentQty * FIVE9_PRICES['Chat Agent'];
+                currentFive9Cost += five9EmailAgentQty * FIVE9_PRICES['Email Agent'];
+                currentFive9Cost += five9NCX1Qty * FIVE9_PRICES['NCX1 Voice + Email + Adv. Chat'];
+                currentFive9Cost += five9SIPInboundQty * FIVE9_PRICES['SIP Inbound Flat Rate'];
+                currentFive9Cost += five9SIPOutboundQty * FIVE9_PRICES['SIP Outbound (No Backup)'];
+                currentFive9Cost += five9RecStorageQty * FIVE9_PRICES['VCC Recording Storage - 2 Months'];
+                currentFive9Cost += five9CallLogStorageQty * FIVE9_PRICES['VCC Call Log Storage - 3 Months'];
+                currentFive9Cost += five9SalesforceQty * FIVE9_PRICES['Salesforce Adapter'];
+                currentFive9Cost += five9UCAdapterQty * FIVE9_PRICES['Five9 UC Adapter - MS Teams / Zoom'];
+                currentFive9Cost += five9AgentAssistQty * FIVE9_PRICES['Agent Assist Standard'];
                 
-                if (checkbox.checked && selectedCount === 1) {
-                    costCell.textContent = '$0.00 (Primer canal gratuito)';
-                } else if (checkbox.checked) {
-                    costCell.textContent = '$100.00';
-                } else {
-                    // Restablecer el costo a $100.00 si no es el único seleccionado y se desmarca,
-                    // o si nunca fue seleccionado
-                    costCell.textContent = '$100.00';
-                }
-                channelIndex++;
-            });
+                five9MonthlyCost = currentFive9Cost;
+            }
+            
+            document.getElementById('five9AgentsCost').textContent = formatCurrency(five9AgentsQty * FIVE9_PRICES['VCC Agent Seat - Blended']);
+            document.getElementById('five9SupervisorsCost').textContent = formatCurrency(five9SupervisorsQty * FIVE9_PRICES['VCC Supervisor']);
+            document.getElementById('five9AdminsCost').textContent = formatCurrency(five9AdminsQty * FIVE9_PRICES['VCC Administrator']);
+            document.getElementById('five9ChatAgentCost').textContent = formatCurrency(five9ChatAgentQty * FIVE9_PRICES['Chat Agent']);
+            document.getElementById('five9EmailAgentCost').textContent = formatCurrency(five9EmailAgentQty * FIVE9_PRICES['Email Agent']);
+            document.getElementById('five9NCX1Cost').textContent = formatCurrency(five9NCX1Qty * FIVE9_PRICES['NCX1 Voice + Email + Adv. Chat']);
+            document.getElementById('five9SIPInboundCost').textContent = formatCurrency(five9SIPInboundQty * FIVE9_PRICES['SIP Inbound Flat Rate']);
+            document.getElementById('five9SIPOutboundCost').textContent = formatCurrency(five9SIPOutboundQty * FIVE9_PRICES['SIP Outbound (No Backup)']);
+            document.getElementById('five9RecStorageCost').textContent = formatCurrency(five9RecStorageQty * FIVE9_PRICES['VCC Recording Storage - 2 Months']);
+            document.getElementById('five9CallLogStorageCost').textContent = formatCurrency(five9CallLogStorageQty * FIVE9_PRICES['VCC Call Log Storage - 3 Months']);
+            document.getElementById('five9SalesforceCost').textContent = formatCurrency(five9SalesforceQty * FIVE9_PRICES['Salesforce Adapter']);
+            document.getElementById('five9UCAdapterCost').textContent = formatCurrency(five9UCAdapterQty * FIVE9_PRICES['Five9 UC Adapter - MS Teams / Zoom']);
+            document.getElementById('five9AgentAssistCost').textContent = formatCurrency(five9AgentAssistQty * FIVE9_PRICES['Agent Assist Standard']);
+            document.getElementById('five9Subtotal').textContent = `${formatCurrency(five9MonthlyCost)} USD`;
+        }
 
-            document.getElementById('channelSubtotal').textContent = `$${channelCost.toFixed(2)} USD`;
-            updateSummary();
+        function calculateChannelCosts() {
+            if (!includeMindX) { channelCost = 0; channelsSelected = 0; selectedChannelNames = []; return; }
+            const checkboxes = document.querySelectorAll('#module1 input[type="checkbox"]');
+            selectedChannelNames = [];
+            let firstCheckedFound = false;
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedChannelNames.push(checkbox.parentElement.nextElementSibling.textContent);
+                }
+                const costCell = checkbox.parentElement.nextElementSibling.nextElementSibling;
+                const baseCost = parseFloat(costCell.getAttribute('data-cost'));
+                if (checkbox.checked && !firstCheckedFound) {
+                    costCell.textContent = formatCurrency(0) + ' (Gratis)';
+                    costCell.style.color = '#d4af37';
+                    firstCheckedFound = true;
+                } else {
+                    costCell.textContent = formatCurrency(baseCost);
+                    costCell.style.color = '#6c757d';
+                }
+            });
+            channelsSelected = selectedChannelNames.length;
+            channelCost = channelsSelected > 0 ? (channelsSelected - 1) * 100 : 0;
+            document.getElementById('channelSubtotal').textContent = `${formatCurrency(channelCost)} USD`;
         }
 
         function calculatePackageCosts() {
-            const selectedPackage = document.querySelector('input[name="package"]:checked');
-            
-            if (selectedPackage) {
-                const packageData = selectedPackage.value.split('-');
-                packageConversations = parseInt(packageData[0]);
-                packageCost = parseFloat(packageData[1]);
-                packageLicenses = parseInt(packageData[2]);
-                
-                document.getElementById('packageSubtotal').textContent = `$${packageCost.toFixed(2)} USD`;
+            if (!includeMindX) { packageCost = 0; packageConversations = 0; packageLicenses = 0; additionalConversationCostPerUnit = 0; additionalConversationsQty = 0; selectedPackageName = ''; return; }
+            const selectedPackageRadio = document.querySelector('input[name="package"]:checked');
+            additionalConversationsQty = parseInt(document.getElementById('additionalConversations').value) || 0;
+            if (selectedPackageRadio) {
+                const [conv, price, licenses, addCost, name] = selectedPackageRadio.value.split('-');
+                packageConversations = parseInt(conv);
+                let basePackagePrice = parseFloat(price);
+                packageLicenses = parseInt(licenses);
+                additionalConversationCostPerUnit = parseFloat(addCost);
+                selectedPackageName = name;
+                packageCost = basePackagePrice + (additionalConversationsQty * additionalConversationCostPerUnit);
                 document.getElementById('includedLicenses').textContent = packageLicenses;
-                document.getElementById('packageLicensesDisplay').textContent = packageLicenses;
-                
-                calculateInsightsCosts(); // Recalcula insights si cambia el paquete
-                calculateAICosts(); // Recalcula IA si cambia el paquete (por el num de conversaciones)
             } else {
-                packageCost = 0;
-                packageConversations = 0;
-                packageLicenses = 0;
-                document.getElementById('packageSubtotal').textContent = '$0.00 USD';
+                packageCost = 0; packageConversations = 0; packageLicenses = 0;
+                additionalConversationCostPerUnit = 0; selectedPackageName = '';
                 document.getElementById('includedLicenses').textContent = '0';
-                document.getElementById('packageLicensesDisplay').textContent = '0';
-                calculateInsightsCosts(); // Recalcula insights a 0
-                calculateAICosts(); // Recalcula IA a 0
             }
-            
-            updateSummary();
+            document.getElementById('packageSubtotal').textContent = `${formatCurrency(packageCost)} USD`;
+            calculateInsightsCosts();
+            calculateAICosts();
         }
 
         function calculateInsightsCosts() {
+            if (!includeMindX) { additionalInsightsCost = 0; additionalInsightsQty = 0; return; }
             additionalInsightsQty = parseInt(document.getElementById('additionalInsights').value) || 0;
-            additionalInsightsCost = additionalInsightsQty * 25.5;
-            
-            document.getElementById('additionalLicensesDisplay').textContent = additionalInsightsQty;
-            document.getElementById('additionalInsightsCost').textContent = `$${additionalInsightsCost.toFixed(2)}`;
-            document.getElementById('insightsSubtotal').textContent = `$${additionalInsightsCost.toFixed(2)} USD`;
-            
-            updateSummary();
+            additionalInsightsCost = additionalInsightsQty * INSIGHTS_LICENSE_COST;
+            document.getElementById('insightsSubtotal').textContent = `${formatCurrency(additionalInsightsCost)} USD`;
         }
 
         function calculateAgentCosts() {
+            if (!includeMindX || includeFive9) { 
+                agentsCost = 0; 
+                agentsQty = 0; 
+                document.getElementById('agentLicenses').value = 0; 
+                document.getElementById('agentsSubtotal').textContent = `${formatCurrency(agentsCost)} USD`;
+                return; 
+            }
             agentsQty = parseInt(document.getElementById('agentLicenses').value) || 0;
-            agentsCost = agentsQty * 20;
-            
-            document.getElementById('agentLicensesDisplay').textContent = agentsQty;
-            document.getElementById('agentsCost').textContent = `$${agentsCost.toFixed(2)}`;
-            document.getElementById('agentsSubtotal').textContent = `$${agentsCost.toFixed(2)} USD`;
-            
-            updateSummary();
+            agentsCost = agentsQty * AGENT_LICENSE_COST;
+            document.getElementById('agentsSubtotal').textContent = `${formatCurrency(agentsCost)} USD`;
         }
 
         function toggleAISection() {
+            if (!includeMindX) { aiDetailsIncluded = false; calculateAICosts(); return; }
             aiDetailsIncluded = document.getElementById('includeAI').checked;
-            const aiDetails = document.getElementById('aiDetails');
-            
-            if (aiDetailsIncluded) {
-                aiDetails.style.display = 'block';
-                calculateAICosts();
+            document.getElementById('aiDetails').style.display = aiDetailsIncluded ? 'block' : 'none';
+            calculateAICosts();
+        }
+
+        function toggleBillingModel() {
+            if (!includeMindX) { calculateAICosts(); return; }
+            const billingModel = document.getElementById('billingModel').value;
+            const tokensModel = document.getElementById('tokensModel');
+            const messagesModel = document.getElementById('messagesModel');
+            const consumptionLabel = document.getElementById('consumptionLabel');
+            if (billingModel === 'tokens') {
+                tokensModel.style.display = 'block';
+                messagesModel.style.display = 'none';
+                consumptionLabel.textContent = 'Tokens/mes estimados';
             } else {
-                aiDetails.style.display = 'none';
-                aiLoadingCost = 0;
-                aiMonthlyCost = 0;
-                updateAIDisplay();
-                updateSummary();
+                tokensModel.style.display = 'none';
+                messagesModel.style.display = 'block';
+                consumptionLabel.textContent = 'Costo unitario';
             }
+            calculateAICosts();
         }
 
         function calculateAICosts() {
-            if (!aiDetailsIncluded || packageConversations === 0) {
-                aiLoadingCost = 0;
+            if (!includeMindX) { 
+                aiLoadingCost = 0; aiStorageCost = 0; aiUsageCost = 0; aiMonthlyCost = 0; 
+            } else if (!aiDetailsIncluded) {
+                aiLoadingCost = 0; 
+                aiStorageCost = 0; 
+                aiUsageCost = 0;
                 aiMonthlyCost = 0;
-                updateAIDisplay();
-                updateSummary();
-                return;
+            } else {
+                const fileSize = parseFloat(document.getElementById('fileSize').value) || 0;
+                const updatesPerYear = parseInt(document.getElementById('updateFrequency').value) || 1;
+                const billingModel = document.getElementById('billingModel').value;
+                aiLoadingCost = fileSize * 0.093 * updatesPerYear;
+                const storageGB = (fileSize / 1000) * 1.7; 
+                aiStorageCost = storageGB * 0.1 * 30; 
+                let totalConversations = packageConversations + additionalConversationsQty;
+                if (totalConversations === 0) {
+                    totalConversations = 1000; 
+                }
+                if (billingModel === 'tokens') {
+                    const aiMessagesPerConv = parseInt(document.getElementById('aiMessagesTokens').value) || 0;
+                    const tokensPerMessage = parseInt(document.getElementById('tokensPerMessage').value) || 350;
+                    const totalAIMessages = totalConversations * aiMessagesPerConv;
+                    const totalTokens = totalAIMessages * tokensPerMessage;
+                    aiUsageCost = (totalTokens / 1000000) * 6.3;
+                    document.getElementById('aiConversationsEstimate').textContent = totalConversations.toLocaleString('es-CO');
+                    document.getElementById('aiMessagesEstimate').textContent = totalAIMessages.toLocaleString('es-CO');
+                    document.getElementById('consumptionEstimate').textContent = totalTokens.toLocaleString('es-CO') + ' tokens';
+                } else {
+                    const aiMessagesPerConv = parseInt(document.getElementById('aiMessagesMsg').value) || 0;
+                    const totalAIMessages = totalConversations * aiMessagesPerConv;
+                    aiUsageCost = (totalAIMessages / 20000) * 111;
+                    document.getElementById('aiConversationsEstimate').textContent = totalConversations.toLocaleString('es-CO');
+                    document.getElementById('aiMessagesEstimate').textContent = totalAIMessages.toLocaleString('es-CO');
+                    document.getElementById('consumptionEstimate').textContent = formatCurrency(111/20000) + '/mensaje';
+                }
+                aiMonthlyCost = aiStorageCost + aiUsageCost;
             }
+            document.getElementById('aiLoadingSubtotal').textContent = `${formatCurrency(aiLoadingCost)} USD`;
+            document.getElementById('aiStorageSubtotal').textContent = `${formatCurrency(aiStorageCost)} USD`;
+            document.getElementById('aiUsageSubtotal').textContent = `${formatCurrency(aiUsageCost)} USD`;
+            document.getElementById('aiMonthlySubtotal').textContent = `${formatCurrency(aiMonthlyCost)} USD`;
+        }
 
-            const messagesPerConversation = parseInt(document.getElementById('messagesPerConversation').value) || 0;
-            const aiMessages = parseInt(document.getElementById('aiMessages').value) || 0;
-            const fileSize = parseFloat(document.getElementById('fileSize').value) || 0;
-            const updateFrequency = parseInt(document.getElementById('updateFrequency').value) || 12;
+        function calculateNotificationCosts() {
+            if (!includeMindX) { notificationCost = 0; totalNotificationsQty = 0; return; }
+            const marketingQty = parseInt(document.getElementById('notifMarketingQty').value) || 0;
+            const utilityQty = parseInt(document.getElementById('notifUtilityQty').value) || 0;
+            const authenticationQty = parseInt(document.getElementById('notifAuthenticationQty').value) || 0;
+            const marketingCost = marketingQty * NOTIFICATION_PRICES.marketing;
+            const utilityCost = utilityQty * NOTIFICATION_PRICES.utility;
+            const authenticationCost = authenticationQty * NOTIFICATION_PRICES.authentication;
+            notificationCost = marketingCost + utilityCost + authenticationCost;
+            totalNotificationsQty = marketingQty + utilityQty + authenticationQty;
+            document.getElementById('notifMarketingCost').textContent = formatCurrency(marketingCost);
+            document.getElementById('notifUtilityCost').textContent = formatCurrency(utilityCost);
+            document.getElementById('notifAuthenticationCost').textContent = formatCurrency(authenticationCost);
+            document.getElementById('notificationSubtotal').textContent = `${formatCurrency(notificationCost)} USD`;
+        }
 
-            // Cálculos
-            // a. Carga de Información (anual, sumando cada carga individual)
-            const loadingCostPerUpdate = fileSize * 0.093;
-            
-            let updatesPerYear;
-            switch(updateFrequency) {
-                case 1: // Mensual
-                    updatesPerYear = 12;
-                    break;
-                case 3: // Trimestral
-                    updatesPerYear = 4;
-                    break;
-                case 6: // Semestral
-                    updatesPerYear = 2;
-                    break;
-                case 12: // Anual
-                    updatesPerYear = 1;
-                    break;
-                default:
-                    updatesPerYear = 1;
+        function selectImplementationType(type) {
+            if (!includeMindX) { mindxImplementationCost = 0; selectedImplementationType = ''; mindxImplementationHours = 0; calculateImplementationCosts(); return; }
+            document.querySelectorAll('.implementation-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById(`implType${type}`).parentElement.classList.add('selected');
+            document.getElementById(`implType${type}`).checked = true;
+            document.getElementById('customImplementationSection').style.display = (type === 'D') ? 'block' : 'none';
+            calculateImplementationCosts();
+        }
+
+        function calculateImplementationCosts() {
+            let currentMindxImplementationCost = 0;
+            const selectedRadio = document.querySelector('input[name="implementationType"]:checked');
+            if (includeMindX) {
+                if (!selectedRadio) {
+                    currentMindxImplementationCost = 0; selectedImplementationType = 'No seleccionado'; mindxImplementationHours = 0;
+                } else {
+                    const [type, cost, hours, name] = selectedRadio.value.split('-');
+                    if (type === 'D') {
+                        const customHours = parseInt(document.getElementById('customHours').value) || 40;
+                        const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 35;
+                        currentMindxImplementationCost = customHours * hourlyRate;
+                        mindxImplementationHours = customHours;
+                        selectedImplementationType = 'Custom';
+                    } else {
+                        currentMindxImplementationCost = parseFloat(cost);
+                        mindxImplementationHours = parseInt(hours);
+                        selectedImplementationType = name;
+                    }
+                }
+            } else {
+                currentMindxImplementationCost = 0;
+                selectedImplementationType = '';
+                mindxImplementationHours = 0;
+                document.querySelectorAll('input[name="implementationType"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                document.getElementById('customImplementationSection').style.display = 'none';
             }
+            mindxImplementationCost = currentMindxImplementationCost;
+            document.getElementById('mindxImplementationSubtotal').textContent = `${formatCurrency(mindxImplementationCost)} USD`;
+            updateTotalOneTimeImplementationCost();
+        }
+
+        function toggleSBCSection() {
+            includeSBC = document.getElementById('includeSBC').checked;
+            document.getElementById('sbcDetails').style.display = includeSBC ? 'block' : 'none';
+            calculateSBCCosts();
+            updateModuleDisplayLogic();
+        }
+
+        function calculateSBCCosts() {
+            if (!includeSBC) {
+                sbcTotalOneTimeCost = 0;
+            } else {
+                sbcKhompQty = parseInt(document.getElementById('sbcKhompQty').value) || 0;
+                sbcHoursBagQty = parseInt(document.getElementById('sbcHoursBagQty').value) || 0;
+                sbcAdditionalHoursQty = parseInt(document.getElementById('sbcAdditionalHoursQty').value) || 0;
+                let currentSbcCost = 0;
+                currentSbcCost += sbcKhompQty * SBC_PRICES['SBC KHOMP X 30 SESIONES Y SOPORTE 1Y'];
+                currentSbcCost += sbcHoursBagQty * SBC_PRICES['Bolsa de 50 horas de implementación SBC'];
+                const trm = parseFloat(document.getElementById('trm').value) || TRM_DEFAULT;
+                const sbcAdditionalHoursCostCOP = sbcAdditionalHoursQty * SBC_PRICES['Hora de desarrollo / Implementación adicional SBC (COP)'];
+                const sbcAdditionalHoursCostUSD = sbcAdditionalHoursCostCOP / trm;
+                currentSbcCost += sbcAdditionalHoursCostUSD;
+                sbcTotalOneTimeCost = currentSbcCost;
+            }
+            document.getElementById('sbcKhompTotal').textContent = formatCurrency(sbcKhompQty * SBC_PRICES['SBC KHOMP X 30 SESIONES Y SOPORTE 1Y']);
+            document.getElementById('sbcHoursBagTotal').textContent = formatCurrency(sbcHoursBagQty * SBC_PRICES['Bolsa de 50 horas de implementación SBC']);
+            const trm = parseFloat(document.getElementById('trm').value) || TRM_DEFAULT;
+            const sbcAdditionalHoursCostCOP = sbcAdditionalHoursQty * SBC_PRICES['Hora de desarrollo / Implementación adicional SBC (COP)'];
+            const sbcAdditionalHoursCostUSD = sbcAdditionalHoursCostCOP / trm;
+            document.getElementById('sbcAdditionalHoursTotal').textContent = formatCurrency(sbcAdditionalHoursCostUSD);
+            document.getElementById('sbcSubtotal').textContent = `${formatCurrency(sbcTotalOneTimeCost)} USD`;
+            updateTotalOneTimeImplementationCost();
+        }
+
+        function updateTotalOneTimeImplementationCost() {
+            let totalCombinedImplementationCost = 0;
+            if (includeMindX) {
+                totalCombinedImplementationCost += mindxImplementationCost;
+            }
+            if (includeFive9) {
+                totalCombinedImplementationCost += FIVE9_PROFESSIONAL_SERVICES_COST;
+            }
+            if (includeSBC) {
+                totalCombinedImplementationCost += sbcTotalOneTimeCost;
+            }
+            document.getElementById('totalOneTimeImplementationCost').textContent = `${formatCurrency(totalCombinedImplementationCost)} USD`;
+        }
+
+        function updateSummaryPage() {
+            const trm = parseFloat(document.getElementById('trm').value) || TRM_DEFAULT;
+            let totalMonthlyRecurrent = 0;
+            if (includeFive9) totalMonthlyRecurrent += five9MonthlyCost;
+            if (includeMindX) {
+                totalMonthlyRecurrent += channelCost + packageCost + additionalInsightsCost + agentsCost + aiMonthlyCost + notificationCost;
+            }
+            let totalOneTimeCosts = 0;
+            if (includeFive9) totalOneTimeCosts += FIVE9_PROFESSIONAL_SERVICES_COST;
+            if (includeMindX) {
+                totalOneTimeCosts += mindxImplementationCost;
+                if (aiDetailsIncluded) totalOneTimeCosts += aiLoadingCost;
+            }
+            if (includeSBC) totalOneTimeCosts += sbcTotalOneTimeCost;
+            const totalAnnualUSD = (totalMonthlyRecurrent * 12) + totalOneTimeCosts;
+            const totalAnnualCOP = totalAnnualUSD * trm;
             
-            aiLoadingCost = loadingCostPerUpdate * updatesPerYear;
-
-            // b. Almacenamiento (mensual)
-            const storageCost = fileSize * 1.7;
-
-            // c. Modelo de consumo (tokens, mensual)
-            const totalConversationsMonthly = packageConversations;
-            const totalAIMessagesMonthly = totalConversationsMonthly * aiMessages;
-            const totalTokensMonthly = totalAIMessagesMonthly * 880; // Suponiendo 880 tokens por mensaje (un estimado)
-            const tokenCostMonthly = (totalTokensMonthly / 1000000) * 6.3;
-
-            // d. Modelo de mensajes (mensual)
-            const totalMessagesMonthly = totalConversationsMonthly * messagesPerConversation;
-            const messageCostMonthly = (totalMessagesMonthly / 20000) * 111;
-
-            // Costo mensual de operación de IA
-            aiMonthlyCost = storageCost + tokenCostMonthly + messageCostMonthly;
-
-            // Actualizar visualización en la tabla de IA Generativa
-            document.getElementById('loadingCost').textContent = `$${loadingCostPerUpdate.toFixed(2)} (x${updatesPerYear}/año = $${aiLoadingCost.toFixed(2)})`;
-            document.getElementById('storageCost').textContent = `$${storageCost.toFixed(2)}`;
-            document.getElementById('tokenCost').textContent = `$${tokenCostMonthly.toFixed(2)}`;
-            document.getElementById('messageCost').textContent = `$${messageCostMonthly.toFixed(2)}`;
-
-            updateAIDisplay();
-            updateSummary();
-        }
-
-        function updateAIDisplay() {
-            document.getElementById('aiLoadingSubtotal').textContent = `$${aiLoadingCost.toFixed(2)} USD`;
-            document.getElementById('aiMonthlySubtotal').textContent = `$${aiMonthlyCost.toFixed(2)} USD`;
-        }
-
-        function updateSummary() {
-            // Actualizar cantidades en la tabla de resumen
-            document.getElementById('summaryChannelsQty').textContent = channelsSelected;
-            document.getElementById('summaryPackageQty').textContent = packageConversations > 0 ? '1 paquete' : '0'; // Asumimos 1 paquete si se selecciona
-            document.getElementById('summaryInsightsQty').textContent = additionalInsightsQty;
-            document.getElementById('summaryAgentsQty').textContent = agentsQty;
-            document.getElementById('summaryAIOperationQty').textContent = aiDetailsIncluded && packageConversations > 0 ? 'Aplicable' : 'No incluido'; // Muestra "Aplicable" si se activó IA y hay paquete
-
-            // Actualizar costos mensuales en la tabla de resumen
-            document.getElementById('summaryChannelsMonthly').textContent = `$${channelCost.toFixed(2)}`;
-            document.getElementById('summaryPackageMonthly').textContent = `$${packageCost.toFixed(2)}`;
-            document.getElementById('summaryInsightsMonthly').textContent = `$${additionalInsightsCost.toFixed(2)}`;
-            document.getElementById('summaryAgentsMonthly').textContent = `$${agentsCost.toFixed(2)}`;
-            document.getElementById('summaryAIMonthly').textContent = `$${aiMonthlyCost.toFixed(2)}`;
-
-            // Calcular y mostrar el Subtotal Mensual Recurrente
-            const totalMonthlyRecurrent = channelCost + packageCost + additionalInsightsCost + agentsCost + aiMonthlyCost;
-            document.getElementById('totalMonthlyRecurrent').textContent = `$${totalMonthlyRecurrent.toFixed(2)}`;
-
-            // Actualizar la tabla de Totales con Conversión
-            document.getElementById('totalAILoadingUSD').textContent = `$${aiLoadingCost.toFixed(2)}`;
-            document.getElementById('totalMonthlyUSD').textContent = `$${totalMonthlyRecurrent.toFixed(2)}`;
+            const monthlyBody = document.getElementById('summaryMonthlyCostsBody');
+            monthlyBody.innerHTML = '';
+            if (includeFive9) {
+                if (five9AgentsQty > 0) monthlyBody.innerHTML += `<tr><td>VCC Agent Seat - Blended</td><td>${five9AgentsQty}</td><td class="cost-display">${formatCurrency(five9AgentsQty * FIVE9_PRICES['VCC Agent Seat - Blended'])}</td></tr>`;
+                if (five9SupervisorsQty > 0) monthlyBody.innerHTML += `<tr><td>VCC Supervisor</td><td>${five9SupervisorsQty}</td><td class="cost-display">${formatCurrency(five9SupervisorsQty * FIVE9_PRICES['VCC Supervisor'])}</td></tr>`;
+                if (five9AdminsQty > 0) monthlyBody.innerHTML += `<tr><td>VCC Administrator</td><td>${five9AdminsQty}</td><td class="cost-display">${formatCurrency(five9AdminsQty * FIVE9_PRICES['VCC Administrator'])}</td></tr>`;
+                if (five9ChatAgentQty > 0) monthlyBody.innerHTML += `<tr><td>Chat Agent</td><td>${five9ChatAgentQty}</td><td class="cost-display">${formatCurrency(five9ChatAgentQty * FIVE9_PRICES['Chat Agent'])}</td></tr>`;
+                if (five9EmailAgentQty > 0) monthlyBody.innerHTML += `<tr><td>Email Agent</td><td>${five9EmailAgentQty}</td><td class="cost-display">${formatCurrency(five9EmailAgentQty * FIVE9_PRICES['Email Agent'])}</td></tr>`;
+                if (five9NCX1Qty > 0) monthlyBody.innerHTML += `<tr><td>NCX1 Voice + Email + Adv. Chat</td><td>${five9NCX1Qty}</td><td class="cost-display">${formatCurrency(five9NCX1Qty * FIVE9_PRICES['NCX1 Voice + Email + Adv. Chat'])}</td></tr>`;
+                if (five9SIPInboundQty > 0) monthlyBody.innerHTML += `<tr><td>SIP Inbound Flat Rate</td><td>${five9SIPInboundQty}</td><td class="cost-display">${formatCurrency(five9SIPInboundQty * FIVE9_PRICES['SIP Inbound Flat Rate'])}</td></tr>`;
+                if (five9SIPOutboundQty > 0) monthlyBody.innerHTML += `<tr><td>SIP Outbound (No Backup)</td><td>${five9SIPOutboundQty}</td><td class="cost-display">${formatCurrency(five9SIPOutboundQty * FIVE9_PRICES['SIP Outbound (No Backup)'])}</td></tr>`;
+                if (five9RecStorageQty > 0) monthlyBody.innerHTML += `<tr><td>VCC Recording Storage - 2 Months</td><td>${five9RecStorageQty}</td><td class="cost-display">${formatCurrency(five9RecStorageQty * FIVE9_PRICES['VCC Recording Storage - 2 Months'])}</td></tr>`;
+                if (five9CallLogStorageQty > 0) monthlyBody.innerHTML += `<tr><td>VCC Call Log Storage - 3 Months</td><td>${five9CallLogStorageQty}</td><td class="cost-display">${formatCurrency(five9CallLogStorageQty * FIVE9_PRICES['VCC Call Log Storage - 3 Months'])}</td></tr>`;
+                if (five9SalesforceQty > 0) monthlyBody.innerHTML += `<tr><td>Salesforce Adapter</td><td>${five9SalesforceQty}</td><td class="cost-display">${formatCurrency(five9SalesforceQty * FIVE9_PRICES['Salesforce Adapter'])}</td></tr>`;
+                if (five9UCAdapterQty > 0) monthlyBody.innerHTML += `<tr><td>Five9 UC Adapter - MS Teams / Zoom</td><td>${five9UCAdapterQty}</td><td class="cost-display">${formatCurrency(five9UCAdapterQty * FIVE9_PRICES['Five9 UC Adapter - MS Teams / Zoom'])}</td></tr>`;
+                if (five9AgentAssistQty > 0) monthlyBody.innerHTML += `<tr><td>Agent Assist Standard</td><td>${five9AgentAssistQty}</td><td class="cost-display">${formatCurrency(five9AgentAssistQty * FIVE9_PRICES['Agent Assist Standard'])}</td></tr>`;
+            }
+            if (includeMindX) {
+                if (channelsSelected > 1) monthlyBody.innerHTML += `<tr><td>Canales Digitales Adicionales</td><td>${channelsSelected - 1} canal(es)</td><td class="cost-display">${formatCurrency(channelCost)}</td></tr>`;
+                if (packageCost > 0 || selectedPackageName) monthlyBody.innerHTML += `<tr><td>Paquete Conversaciones (${selectedPackageName})</td><td>${(packageConversations + additionalConversationsQty).toLocaleString('es-CO')} convers.</td><td class="cost-display">${formatCurrency(packageCost)}</td></tr>`;
+                if (additionalInsightsQty > 0) monthlyBody.innerHTML += `<tr><td>Dashboards MINDX Adicionales</td><td>${additionalInsightsQty}</td><td class="cost-display">${formatCurrency(additionalInsightsCost)}</td></tr>`;
+                if (agentsQty > 0) monthlyBody.innerHTML += `<tr><td>Agentes MindX</td><td>${agentsQty}</td><td class="cost-display">${formatCurrency(agentsCost)}</td></tr>`;
+                if (aiDetailsIncluded) {
+                    if (aiStorageCost > 0) monthlyBody.innerHTML += `<tr><td>IA - Almacenamiento Mensual</td><td>N/A</td><td class="cost-display">${formatCurrency(aiStorageCost)}</td></tr>`;
+                    if (aiUsageCost > 0) monthlyBody.innerHTML += `<tr><td>IA - Consumo Mensual</td><td>Estimado</td><td class="cost-display">${formatCurrency(aiUsageCost)}</td></tr>`;
+                }
+                if (totalNotificationsQty > 0) monthlyBody.innerHTML += `<tr><td>Notificaciones Outbound</td><td>${totalNotificationsQty.toLocaleString('es-CO')}</td><td class="cost-display">${formatCurrency(notificationCost)}</td></tr>`;
+            }
+            document.getElementById('summaryTotalMonthlyUSD').textContent = formatCurrency(totalMonthlyRecurrent);
+            document.getElementById('summaryTotalMonthlyCOP').textContent = formatCurrency(totalMonthlyRecurrent * trm, 'COP');
             
-            const totalAnnualUSD = (totalMonthlyRecurrent * 12) + aiLoadingCost;
-            document.getElementById('totalAnnualUSD').textContent = `$${totalAnnualUSD.toFixed(2)}`;
+            const oneTimeBody = document.getElementById('summaryOneTimeCostsBody');
+            oneTimeBody.innerHTML = '';
+            if (includeFive9) oneTimeBody.innerHTML += `<tr><td>Servicios Profesionales Five9</td><td>${formatCurrency(FIVE9_PROFESSIONAL_SERVICES_COST)}</td><td>${formatCurrency(FIVE9_PROFESSIONAL_SERVICES_COST * trm, 'COP')}</td></tr>`;
+            if (mindxImplementationCost > 0) oneTimeBody.innerHTML += `<tr><td>Implementación MINDX (${selectedImplementationType})</td><td>${formatCurrency(mindxImplementationCost)}</td><td>${formatCurrency(mindxImplementationCost * trm, 'COP')}</td></tr>`;
+            if (includeMindX && aiDetailsIncluded && aiLoadingCost > 0) oneTimeBody.innerHTML += `<tr><td>IA - Carga de Conocimiento</td><td>${formatCurrency(aiLoadingCost)}</td><td>${formatCurrency(aiLoadingCost * trm, 'COP')}</td></tr>`;
+            if (includeSBC && sbcTotalOneTimeCost > 0) oneTimeBody.innerHTML += `<tr><td>Hardware y Servicios SBC</td><td>${formatCurrency(sbcTotalOneTimeCost)}</td><td>${formatCurrency(sbcTotalOneTimeCost * trm, 'COP')}</td></tr>`;
+            document.getElementById('summaryTotalOneTimeUSD').textContent = formatCurrency(totalOneTimeCosts);
+            document.getElementById('summaryTotalOneTimeCOP').textContent = formatCurrency(totalOneTimeCosts * trm, 'COP');
 
-            calculateCurrencyConversion(); // Recalcular conversión cada vez que el resumen se actualiza
+            document.getElementById('summaryTotalAnnualUSD').textContent = formatCurrency(totalAnnualUSD, 'USD');
+            document.getElementById('summaryTotalAnnualCOP').textContent = formatCurrency(totalAnnualCOP, 'COP');
+            document.getElementById('summaryTrmValue').textContent = trm.toLocaleString('es-CO');
         }
 
-        function calculateCurrencyConversion() {
-            const trmInput = document.getElementById('trm');
-            const trm = parseFloat(trmInput.value) || 0;
-
-            const totalAILoadingUSD = parseFloat(document.getElementById('totalAILoadingUSD').textContent.replace('$', '')) || 0;
-            const totalMonthlyUSD = parseFloat(document.getElementById('totalMonthlyUSD').textContent.replace('$', '')) || 0;
-            const totalAnnualUSD = parseFloat(document.getElementById('totalAnnualUSD').textContent.replace('$', '')) || 0;
-
-            document.getElementById('totalAILoadingCOP').textContent = `$${(totalAILoadingUSD * trm).toLocaleString('es-CO', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
-            document.getElementById('totalMonthlyCOP').textContent = `$${(totalMonthlyUSD * trm).toLocaleString('es-CO', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
-            document.getElementById('totalAnnualCOP').textContent = `$${(totalAnnualUSD * trm).toLocaleString('es-CO', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+        function confirmReset() {
+            if (confirm("¿Está seguro de que desea reiniciar la calculadora? Esta acción borrará todos los campos registrados y se reiniciará el cálculo.")) {
+                resetCalculator();
+            }
         }
 
-        // Inicializar cálculos y visualización al cargar la página
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('trm').value = TRM_DEFAULT; // Establecer TRM por defecto
+        function resetCalculator() {
+            document.getElementById('includeMindX').checked = true;
+            document.getElementById('includeFive9').checked = false;
+            document.getElementById('five9Agents').value = 0;
+            document.getElementById('five9Supervisors').value = 0;
+            document.getElementById('five9Admins').value = 0;
+            document.getElementById('five9ChatAgent').value = 0;
+            document.getElementById('five9EmailAgent').value = 0;
+            document.getElementById('five9NCX1').value = 0;
+            document.getElementById('five9SIPInbound').value = 1;
+            document.getElementById('five9SIPOutbound').value = 1;
+            document.getElementById('five9RecStorage').value = 0;
+            document.getElementById('five9CallLogStorage').value = 0;
+            document.getElementById('five9Salesforce').value = 0;
+            document.getElementById('five9UCAdapter').value = 0;
+            document.getElementById('five9AgentAssist').value = 0;
+            document.querySelectorAll('#module1 input[type="checkbox"]').forEach(c => c.checked = false);
+            document.querySelectorAll('#module2 input[type="radio"]').forEach(r => r.checked = false);
+            document.getElementById('additionalConversations').value = 0;
+            document.getElementById('additionalInsights').value = 0;
+            document.getElementById('agentLicenses').value = 0;
+            document.getElementById('includeAI').checked = false;
+            document.getElementById('fileSize').value = 100;
+            document.getElementById('updateFrequency').value = '12';
+            document.getElementById('billingModel').value = 'messages';
+            document.getElementById('aiMessagesMsg').value = 3;
+            document.getElementById('aiMessagesTokens').value = 3;
+            document.getElementById('tokensPerMessage').value = 350;
+            document.getElementById('notifMarketingQty').value = 0;
+            document.getElementById('notifUtilityQty').value = 0;
+            document.getElementById('notifAuthenticationQty').value = 0;
+            document.querySelectorAll('#module7 input[name="implementationType"]').forEach(r => r.checked = false);
+            document.getElementById('customHours').value = 40;
+            document.getElementById('hourlyRate').value = 35;
+            document.getElementById('customImplementationSection').style.display = 'none';
+            document.getElementById('includeSBC').checked = false;
+            document.getElementById('sbcKhompQty').value = 0;
+            document.getElementById('sbcHoursBagQty').value = 0;
+            document.getElementById('sbcAdditionalHoursQty').value = 0;
+            document.getElementById('trm').value = TRM_DEFAULT;
+            handleProductSelection();
             calculateChannelCosts();
             calculatePackageCosts();
             calculateInsightsCosts();
             calculateAgentCosts();
-            calculateAICosts(); // Asegura que los costos de IA se calculen si el checkbox está marcado inicialmente
-            updateSummary();
-            calculateCurrencyConversion(); // Realiza la conversión inicial
-            updateFavicon(0);
+            toggleAISection();
+            calculateNotificationCosts();
+            selectImplementationType('');
+            toggleSBCSection();
+            goToStep(0);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainContent = document.querySelector('.main-content');
+            const navList = document.querySelector('.navbar-nav');
+            
+            const modules = [
+                { title: 'Producto', id: 'module0' },
+                { title: 'Canales', id: 'module1' },
+                { title: 'Conversaciones', id: 'module2' },
+                { title: 'Dashboards', id: 'module3' },
+                { title: 'Agentes', id: 'module4' },
+                { title: 'IA', id: 'module5' },
+                { title: 'Notificaciones', id: 'module6' },
+                { title: 'Implementación', id: 'module7' },
+                { title: 'Resumen', id: 'module8' }
+            ];
+
+            modules.forEach((module, index) => {
+                const navItem = document.createElement('li');
+                navItem.className = 'nav-item';
+                const navLink = document.createElement('a');
+                navLink.className = `nav-link ${index === 0 ? 'active' : ''}`;
+                navLink.href = '#';
+                navLink.textContent = module.title;
+                navLink.onclick = (e) => { e.preventDefault(); goToStep(index); };
+                if (index > 0) {
+                    navLink.id = index === 8 ? 'summaryNavLink' : `navLink${index}`;
+                    navLink.style.display = 'none';
+                }
+                navItem.appendChild(navLink);
+                navList.appendChild(navItem);
+            });
+            
+            resetCalculator();
         });
     </script>
 </body>
